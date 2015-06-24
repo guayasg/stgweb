@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  codpropiedad: MyString
+  tcorto: MyText
+  tlargo: MyText
+  tcomercial: MyText
+  componertcorto_id: 1
+  componertlargo_id: 1
+  componertcomercial_id: 1
+  propnumerica: false
+
+two:
+  codpropiedad: MyString
+  tcorto: MyText
+  tlargo: MyText
+  tcomercial: MyText
+  componertcorto_id: 1
+  componertlargo_id: 1
+  componertcomercial_id: 1
+  propnumerica: false

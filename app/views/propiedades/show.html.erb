@@ -1,0 +1,44 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Codpropiedad:</strong>
+  <%= @propiedad.codpropiedad %>
+</p>
+
+<p>
+  <strong>Tcorto:</strong>
+  <%= @propiedad.tcorto %>
+</p>
+
+<p>
+  <strong>Tlargo:</strong>
+  <%= @propiedad.tlargo %>
+</p>
+
+<p>
+  <strong>Tcomercial:</strong>
+  <%= @propiedad.tcomercial %>
+</p>
+
+<p>
+  <strong>Componertcorto:</strong>
+  <%= @propiedad.componertcorto_id %>
+</p>
+
+<p>
+  <strong>Componertlargo:</strong>
+  <%= @propiedad.componertlargo_id %>
+</p>
+
+<p>
+  <strong>Componertcomercial:</strong>
+  <%= @propiedad.componertcomercial_id %>
+</p>
+
+<p>
+  <strong>Propnumerica:</strong>
+  <%= @propiedad.propnumerica %>
+</p>
+
+<%= link_to 'Edit', edit_propiedad_path(@propiedad) %> |
+<%= link_to 'Back', propiedades_path %>

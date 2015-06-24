@@ -1,0 +1,41 @@
+<h1>Listing propiedades</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Codpropiedad</th>
+      <th>Tcorto</th>
+      <th>Tlargo</th>
+      <th>Tcomercial</th>
+      <th>Componertcorto</th>
+      <th>Componertlargo</th>
+      <th>Componertcomercial</th>
+      <th>Propnumerica</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @propiedades.each do |propiedad| %>
+      <tr>
+        <td><%= propiedad.codpropiedad %></td>
+        <td><%= propiedad.tcorto %></td>
+        <td><%= propiedad.tlargo %></td>
+        <td><%= propiedad.tcomercial %></td>
+        <td><%= propiedad.componertcorto_id %></td>
+        <td><%= propiedad.componertlargo_id %></td>
+        <td><%= propiedad.componertcomercial_id %></td>
+        <td><%= propiedad.propnumerica %></td>
+        <td><%= link_to 'Show', propiedad %></td>
+        <td><%= link_to 'Edit', edit_propiedad_path(propiedad) %></td>
+        <td><%= link_to 'Destroy', propiedad, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Propiedad', new_propiedad_path %>
