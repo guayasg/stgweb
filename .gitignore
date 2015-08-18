@@ -16,3 +16,6 @@
 /tmp
 README.rdoc
 
+Gemfile.lock
+db/schema.rb
+config/database.yml

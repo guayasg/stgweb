@@ -17,7 +17,7 @@
 development:
   adapter: postgresql  
   encoding: utf8  
-  database: STG4  
+  database: stg
   pool: 5  
   username: stg  
   password: padentro  

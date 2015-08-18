@@ -27,10 +27,6 @@ ActiveRecord::Schema.define(version: 20150624181202) do
 
   add_index "menus", ["texto"], name: "menus_texto_key", unique: true, using: :btree
 
-  create_table "p_campovalor", id: false, force: true do |t|
-    t.text "concatenate"
-  end
-
   create_table "propiedad", force: true do |t|
     t.string   "codpropiedad"
     t.text     "tcorto"
@@ -45,16 +41,14 @@ ActiveRecord::Schema.define(version: 20150624181202) do
   end
 
   create_table "propiedades", force: true do |t|
-    t.string   "codpropiedad"
-    t.text     "tcorto"
-    t.text     "tlargo"
-    t.text     "tcomercial"
-    t.integer  "componertcorto_id"
-    t.integer  "componertlargo_id"
-    t.integer  "componertcomercial_id"
-    t.boolean  "propnumerica"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string  "codpropiedad",          limit: 5,   default: "",    null: false
+    t.string  "tcorto",                limit: 60
+    t.string  "tlargo",                limit: 100
+    t.string  "tcomercial",            limit: 100
+    t.boolean "propnumerica",                      default: false
+    t.integer "componertcorto_id",                 default: 1
+    t.integer "componertlargo_id",                 default: 1
+    t.integer "componertcomercial_id",             default: 1
   end
 
   create_table "propiedades_componer", force: true do |t|
