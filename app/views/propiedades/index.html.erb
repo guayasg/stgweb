@@ -9,7 +9,7 @@
       <th>Texto Comercial</th>
       <th>Texto Corto compone el ...</th>
       <th>Texto Largo compone el ...</th>
-      <th>Texto Comercial compone el</th>
+      <th>Texto Comercial compone el ...</th>
       <th>¿Propiedad Numerica?</th>
       <th></th>
       <th></th>
@@ -18,20 +18,23 @@
   </thead>
 
   <tbody>
+   
     <% @propiedades.each do |propiedad| %>
+     
       <tr>
         <td><%= propiedad.codpropiedad %></td>
         <td><%= propiedad.tcorto %></td>
         <td><%= propiedad.tlargo %></td>
         <td><%= propiedad.tcomercial %></td>
-        <td><%= propiedad.componertcorto_id %></td>
-        <td><%= propiedad.componertlargo_id %></td>
-        <td><%= propiedad.componertcomercial_id %></td>
+        <td><%= PropiedadesComponer.find(propiedad.componertcorto_id).describe%></td>
+        <td><%= PropiedadesComponer.find(propiedad.componertlargo_id).describe %></td>
+        <td><%= PropiedadesComponer.find(propiedad.componertcomercial_id).describe %></td>
         <td><%= propiedad.propnumerica %></td>
-        <td><%= link_to 'Show', propiedad %></td>
-        <td><%= link_to 'Edit', edit_propiedad_path(propiedad) %></td>
-        <td><%= link_to 'Destroy', propiedad, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Mostrar Detalle', propiedad %></td>
+        <td><%= link_to 'Editar', edit_propiedad_path(propiedad) %></td>
+        <td><%= link_to 'Eliminar', propiedad, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
+
     <% end %>
   </tbody>
 </table>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  describe: MyString
+  string,: MyString
+  aplicafamilia: MyString
+  boolean: MyString
+
+two:
+  describe: MyString
+  string,: MyString
+  aplicafamilia: MyString
+  boolean: MyString

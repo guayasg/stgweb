@@ -1,7 +1,7 @@
-<%= form_for(@propiedad) do |f| %>
+<% form_for(@propiedad) do |f| %>
   <% if @propiedad.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@propiedad.errors.count, "error") %> prohibited this propiedad from being saved:</h2>
+      <h2><%= pluralize(@propiedad.errors.count, "error") %> Esta propiedad no puede ser modificada</h2>
 
       <ul>
       <% @propiedad.errors.full_messages.each do |msg| %>
@@ -12,32 +12,33 @@
   <% end %>
 
   <div class="field">
-    <%= f.label :codpropiedad %><br>
+    <%= f.label "Cod propiedad" %><br>
     <%= f.text_field :codpropiedad %>
   </div>
   <div class="field">
-    <%= f.label :tcorto %><br>
+    <%= f.label "Texto Corto" %><br>
     <%= f.text_area :tcorto, :rows => 2 %>
   </div>
   <div class="field">
-    <%= f.label :tlargo %><br>
+    <%= f.label "Texto Largo" %><br>
     <%= f.text_area :tlargo, :rows => 2 %>
   </div>
   <div class="field">
-    <%= f.label :tcomercial %><br>
+    <%= f.label "Texto Comercial" %><br>
     <%= f.text_area :tcomercial, :rows => 2 %>
   </div>
   <div class="field">
-    <%= f.label :componertcorto_id %><br>
-    <%= f.number_field :componertcorto_id %>
+    <%= f.label "Texto Corto compone ..." %><br>
+    <%= f.collection_select(:componertcorto_id, PropiedadesComponer.all, :id, :describe, {:selected => @propiedad.componertcorto_id})%>
+   
   </div>
   <div class="field">
-    <%= f.label :componertlargo_id %><br>
-    <%= f.number_field :componertlargo_id %>
+    <%= f.label "Texto Largo compone ..." %><br>
+    <%=f.collection_select( :componertlargo_id, PropiedadesComponer.all, :id, :describe, {:selected => @propiedad.componertlargo_id})%>
   </div>
   <div class="field">
-    <%= f.label :componertcomercial_id %><br>
-    <%= f.number_field :componertcomercial_id %>
+    <%= f.label "Texto Comercial compone ..." %><br>
+    <%=f.collection_select( :componertcomercial_id, PropiedadesComponer.all, :id, :describe, {:selected => @propiedad.componertcomercial_id})%>
   </div>
   <div class="field">
     <%= f.label :propnumerica %><br>
