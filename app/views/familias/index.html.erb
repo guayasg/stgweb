@@ -1,0 +1,40 @@
+
+<%=render 'form_busqueda'%>
+<br>
+<br>
+<%= debug(params)%>
+
+<% if @fam_prop && @fam_prop.familias_propiedades.count >0 %>	
+		<h1>1) Propiedades y valores de la familia</h1>
+		<%= render partial: "fp_form", object: @fam_prop %>
+<% elsif @fam_prop %>
+		<h2>1) No hay propiedades/valores en esta familia</h1>
+<% end %>
+  <%if @fam_prop %>
+	<%= form_for(@fam_prop, :action => 'componer_articulo', :method => "post") do |f| %>
+		<%= f.hidden_field :id %>
+		<% if @fam_prop.articulos.count > 0%>
+			<h1>2) Denominación de artículos y propiedades incluidas</h1>
+			<%= render partial: "grupos", object: f %>
+		<% else %>	
+			<h2>2) No hay artículos en esta familia</h1>
+			<h4>Familias, Propiedades/valores que generarán los artículos por combinatoria:</h4>
+			<%= select_tag(:id, options_for_select(@propiedades_familia.to_a),{ multiple: true, size: 8})%>	
+			<%= f.submit  "(Re)Generar Artículos", class: "btn btn-warning" %>
+		<% end %>
+	<% end %>
+<% end %>
+	
+
+
+<h1>
+<%if @fam_prop %> 3) <%end%>
+
+	 Listado de familias incluidas</h1>
+
+<%= render partial: "subfamilias", object: @familia_filtrada %>
+
+
+<br>
+
+

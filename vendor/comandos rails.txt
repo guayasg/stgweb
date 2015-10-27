@@ -1,0 +1,8 @@
+comandos usados en rails 24/06/2015:
+
+rails generate scaffold Propiedad campo:tipo campo2:tipo
+
+rake db:migrate
+rake db:migrate:down VERSION=2015...
+
+rake test

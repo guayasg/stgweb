@@ -1,0 +1,43 @@
+<%= form_for(@familia, html: {class: "form-horizontal"}) do |f| %>
+  <% if @familia.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@familia.errors.count, "error") %> Esta familia no ha podido ser guardada:</h2>
+
+      <ul>
+      <% @familia.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+ <center> Se encuentra en: 
+	<kbd> <%= @ruta.nil? ? "Top":@ruta %> </kbd>
+	</center>
+	<%= hidden_field_tag :id,@id %>
+	<%= f.hidden_field :padre_id %>
+   <div class="form-group">
+    <%= f.label :codfamilia, class:	"col-sm-2" %><br>
+    <%= f.text_field :codfamilia, class:	"col-sm-10" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :describe, class:	"col-sm-2" %><br>
+    <%= f.text_field :describe, class:	"col-sm-10" %>
+  </div>
+  <div class="form-group">
+    <%= f.label :componer_id, class:	"col-sm-2" %><br>
+    <%= f.collection_select(:componer_id, PropiedadesComponer.all.where("aplicafamilia"), :id, :describe, {:selected => @familia.componer_id}, {class:	"col-sm-10"})%>
+  </div>
+  <div class="form-group">
+    <%= f.label :propia, class:	"col-sm-2" %><br>
+    <%= f.check_box :propia , class:	"col-sm-10"%>
+  </div>
+  <div class="form-group">
+    <%= f.label :competencia, class:	"col-sm-2" %><br>
+    <%= f.check_box :competencia, class:	"col-sm-10" %>
+  </div>
+  <div class="form-group">
+    <%= f.submit submit_title %>
+  </div>
+<% end %>

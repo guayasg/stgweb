@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+            <title>STG WEB</title>
+            
+            
+            <%= stylesheet_link_tag :all,'bootstrap', media: 'all'%>
+            <%= javascript_include_tag :application, :all, :cache => true %>
+            <%= csrf_meta_tags %>
+    </head>
+    <body>
+        <div class="container">
+                <div class="row">
+                      <div class="span9"><%= yield %></div>
+                      <div class="span3">
+                         <h2>About Us</h2>
+                 </div>
+       </div>
+        </div>
+        <!--http://stackoverflow.com/questions/10123354/twitter-bootstrap-in-rails-3-2-3
+        	https://librosweb.es/libro/introduccion_rails/capitulo_5.html
+        	http://pullmonkey.com/2008/3/30/dynamic-select-boxes-ruby-on-rails
+        	http://railscasts.com/episodes/205-unobtrusive-javascript?language=es&view=asciicast/-->
+    </body>
+</html>
+

@@ -1,0 +1,45 @@
+p>
+  <strong>Familia:</strong>
+  <%= @familia.describe %>
+</p>
+ 
+ 
+<h2>Add a comment:</h2>
+<%= form_for([@familia, @familia.familias_propiedades.build]) do |f| %>
+  <p>
+    <%= f.label :propiedad_id %><br>
+    <%= f.text_field :propiedad_id%>
+  </p>
+  <p>
+    <%= f.label :valor %><br>
+    <%= f.text_area :valor %>
+  </p>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+ 
+<%= link_to 'Back', familias_path(@familia) %>
+
+<p>
+  <strong>Componer:</strong>
+  <%= @familia_filtrada.componer_id %>
+</p>
+
+
+<p>
+  <strong>Propia:</strong>
+  <%= @familia_filtrada.propia %>
+</p>
+
+
+<p>
+  <strong>Competencia:</strong>
+  <%= @familia_filtrada.competencia %>
+</p>
+
+
+
+
+<%= link_to 'Edit', edit_familia_path(@familia_filtrada) %> |
+<%= link_to 'Back', familias_path %>

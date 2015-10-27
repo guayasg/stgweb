@@ -1,0 +1,44 @@
+<div class="table-responsive">
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Jerarquía</th>
+      <th>Padre</th>
+      <th>Codfamilia</th>
+      <th>Familia</th>
+      <th>Componer</th>
+      <th>Propia</th>
+      <th>Competencia</th>
+      <th>orden</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+ 
+  <tbody>
+    <% subfamilias.each do |familia| %>
+      <tr>
+        <td><%= familia.path %></td>
+        <td><%= familia.padre_id %></td>
+        <td><%= familia.codfamilia %></td>
+        <td><%= familia.describe %></td>
+        <td><%= PropiedadesComponer.find(familia.componer_id).describe %></td>
+        <td><%= truefalse_view(familia.propia.to_s) %></td>
+        <td><%= truefalse_view(familia.competencia.to_s)  %></td>
+        <td><%= familia.orden %></td>
+        
+        <td><%= link_to 'Mostrar', familias_path(:id => familia.id) %></td>
+        <td><%= link_to 'editar', edit_familia_path(familia,:familia_id => @id) %></td>
+        
+        <td>
+        	<!-- <%= button_to 'eliminar', familias_path(familia: familia.id, method: :destroy) ,remote: true, method: :delete, data: { confirm: 'Are you sure?' } %> !-->
+        	<%= button_to "eliminar", familia, :method => :delete, class: "btn btn-danger",data: { confirm: '¿Borrar esta familia?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+<%= link_to 'Nueva Familia', new_familia_path(:familia_id => @id) %>

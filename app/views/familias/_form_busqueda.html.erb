@@ -1,0 +1,14 @@
+	
+<%= form_tag(:familias, {method: "get", class: "form-horizontal"}) do  %>
+  <div class="form-group">
+  	<%= label_tag(:id,"Búsqueda de familias", class: "col-sm-2")%>
+  	<%#= select_tag(:q, options_for_select([['Top',0]] + @familias.map {|f| [f.path,f.id]}),{class: "col-sm-9"})  %>
+  	<%= select_tag(:id, options_for_select(@familias.map {|f| [f.path,f.id]},params[:id]),{class: "col-sm-9", prompt: "Top"})  %>
+     <%=  submit_tag "Ir a famila", class: "btn btn-primary btn-lg col-sm-1" %>
+  </div>
+  <div class=>
+<% end %>
+
+<center> Se encuentra en: 
+<kbd> <%= @ruta %> </kbd>
+</center>

@@ -1,0 +1,55 @@
+
+<%= form_for(@propiedad, html: {class: "form-horizontal"}) do |f| %>
+  <% if @propiedad.errors.any? %>
+
+    <div id="error_explanation">
+      <h2><%= pluralize(@propiedad.errors.count, "error") %> Esta propiedad no puede ser modificada</h2>
+
+      <ul>
+      <% @propiedad.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+   <div class="form-group">
+    <%= f.label "Cod propiedad", class:	"col-sm-2" %>
+    <%= f.text_field :codpropiedad,  class:	"col-sm-10"%>
+  </div>
+  <div class="form-group">
+    <%= f.label "Texto Corto" , class:	"col-sm-2"  %>
+    <%= f.text_area :tcorto, :rows => 2, class:	"col-sm-10"  %>
+  </div>
+  <div class="form-group">
+    <%= f.label "Texto Largo" , class:	"col-sm-2"%>
+    <%= f.text_area :tlargo, :rows => 2, class:	"col-sm-10"%>
+  </div>
+  <div class="form-group">
+    <%= f.label "Texto Comercial" , class:	"col-sm-2" %><br>
+    <%= f.text_area :tcomercial, :rows => 2, class:	"col-sm-10"%>
+  </div>
+  
+
+  <div class="form-group">
+    <%= f.label "Texto Corto compone ..." , class:	"col-sm-2" %><br>
+    <%= f.collection_select(:componertcorto_id, PropiedadesComponer.all, :id, :describe, {:selected => @propiedad.componertcorto_id}, {class:	"col-sm-10"})%>
+   
+  </div>
+  <div class="form-group">
+    <%= f.label "Texto Largo compone ..." , class:	"col-sm-2"%><br>
+    <%=f.collection_select( :componertlargo_id, PropiedadesComponer.all, :id, :describe, {:selected => @propiedad.componertlargo_id}, {class:	"col-sm-10"})%>
+  </div>
+  <div class="form-group">
+    <%= f.label "Texto Comercial compone ..." , class:	"col-sm-2" %><br>
+    <%=f.collection_select( :componertcomercial_id, PropiedadesComponer.all, :id, :describe, {:selected => @propiedad.componertcomercial_id}, {class:	"col-sm-10"})%>
+  </div>
+  <div class="form-group">
+    <%= f.label "¿Propiedad numérica?",  class:	"col-sm-2"%><br>
+    <%= f.check_box :propnumerica, class:	"col-sm-10" %>
+  </div>
+  <div class="form-group">
+    <%= f.submit "Actualizar propiedad", class: "btn btn-primary btn-lg"%>
+  </div>
+  
+<% end %>

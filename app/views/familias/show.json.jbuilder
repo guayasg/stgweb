@@ -1,0 +1,1 @@
+json.extract! @familia_filtrada, :id, :padre_id, :integer,, :codfamilia, :string,, :describe, :string,, :componer_id, :integer,, :propia, :bool,, :competencia, :bool,orden, :integer, :created_at, :updated_at

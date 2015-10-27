@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  padre_id: MyString
+  integer,: MyString
+  codfamilia: MyString
+  string,: MyString
+  describe: MyString
+  string,: MyString
+  componer_id: MyString
+  integer,: MyString
+  propia: MyString
+  bool,: MyString
+  competencia: MyString
+  bool,orden: MyString
+  integer: MyString
+
+two:
+  padre_id: MyString
+  integer,: MyString
+  codfamilia: MyString
+  string,: MyString
+  describe: MyString
+  string,: MyString
+  componer_id: MyString
+  integer,: MyString
+  propia: MyString
+  bool,: MyString
+  competencia: MyString
+  bool,orden: MyString
+  integer: MyString
