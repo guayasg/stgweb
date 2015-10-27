@@ -1,6 +1,6 @@
 Stgweb::Application.routes.draw do
   
-<<<<<<< HEAD
+
   
   resources :familias do
     
