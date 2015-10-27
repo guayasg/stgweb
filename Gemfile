@@ -12,6 +12,7 @@ gem 'sass-rails', '~> 4.0.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
+
 gem 'twitter-bootstrap-rails'
 
 # Use CoffeeScript for .js.coffee assets and views
@@ -34,11 +35,13 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+
 #para eliminar items
 gem 'coffee-script-source', '1.8.0'
 
 #paginación
 gem 'will_paginate-bootstrap'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
 

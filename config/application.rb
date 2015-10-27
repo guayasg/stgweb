@@ -6,9 +6,12 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
+<<<<<<< HEAD
 # JavaScript files you want as :defaults (application.js is always included).
 
 
+=======
+>>>>>>> 9b1d472ce5ca41fa2bdeca7a84a77f3fad8310e8
 module Stgweb
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
@@ -22,8 +25,11 @@ module Stgweb
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+<<<<<<< HEAD
     config.autoload_paths << Rails.root.join('lib')  
     
     #config.autoload_paths << Rails.root.join('lib/*')
+=======
+>>>>>>> 9b1d472ce5ca41fa2bdeca7a84a77f3fad8310e8
   end
 end

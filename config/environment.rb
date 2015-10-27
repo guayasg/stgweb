@@ -12,6 +12,7 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.plural /([rlnd])([A-Z]|_|$)/, '\1es\2'
   inflect.singular /([taeiou])s([A-Z]|_|$)/, '\1\2'
   inflect.singular /([rlnd])es([A-Z]|_|$)/, '\1\2'
+
   inflect.plural 'familia', 'familias'
 end
 

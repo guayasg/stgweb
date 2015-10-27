@@ -1,5 +1,6 @@
 Stgweb::Application.routes.draw do
   
+<<<<<<< HEAD
   
   resources :familias do
     
@@ -14,7 +15,6 @@ Stgweb::Application.routes.draw do
   end
   
   post 'familias/:id' => 'familias#componer_articulo'
-  resources :propiedades
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
