@@ -128,7 +128,7 @@ def edit_familias_propiedades
           format.html { redirect_to :action => :index, :id => params[:familia][:id]  }
           format.json { head :no_content }
         else
-          format.html { render action: 'edit' }
+          format.html { render action: :index, :id => params[:familia][:id] }
         end
       end
 
