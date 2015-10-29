@@ -3,19 +3,23 @@ Stgweb::Application.routes.draw do
 
   
   resources :familias do
-    
+
     resources :familias_propiedades 
-    #post 'create_familia_propiedad', on: :member
+    post 'componer_articulo', on: :collection
     post 'edit_familias_propiedades', on: :collection
     
     get 'mostrar_valores_ligados', on: :member
     post 'editar_valores_ligados', on: :member
-  
+    
     
   end
+    #post 'familias/:id', to: 'familias#edit_familias_propiedades'
+    post 'familias/:id', to: 'familias#componer_articulo'
+    
+    
   
-  post 'familias/:id' => 'familias#componer_articulo'
-
+  
+  resources :propiedades
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

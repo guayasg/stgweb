@@ -2,9 +2,10 @@ class FamiliaPropiedad < ActiveRecord::Base
   self.table_name = "familias_propiedades"
   has_many :articulos_propiedades
   has_one :familia_valorligado, inverse_of: :familias_propiedades
-  has_many :familias_valoresligados
+  has_many :familias_valoresligados, class_name: "FamiliaValorligado", foreign_key: "fp_id"
   belongs_to :familia
   belongs_to :propiedad
+  validates :cod, length: { maximum: 10, too_long: "%{count} caracteres es lo máximo para codificar el código" }
 end
 
 class FamiliaValorligado < ActiveRecord::Base

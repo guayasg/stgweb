@@ -6,6 +6,9 @@
 
 <% if @fam_prop && @fam_prop.familias_propiedades.count >0 %>	
 		<h1>1) Propiedades y valores de la familia</h1>
+		 <% if flash[:notice] %>
+    		<div class="alert alert-danger"><%= flash[:notice] %></div>
+  		<% end %>
 		<%= render partial: "fp_form", object: @fam_prop %>
 <% elsif @fam_prop %>
 		<h2>1) No hay propiedades/valores en esta familia</h1>
@@ -13,8 +16,12 @@
   <%if @fam_prop %>
 	<%= form_for(@fam_prop, :action => 'componer_articulo', :method => "post") do |f| %>
 		<%= f.hidden_field :id %>
+		<% if flash[:notice2] %>
+			<div class="alert alert-danger"><%= flash[:notice2] %></div>
+		<% end %>
 		<% if @fam_prop.articulos.count > 0%>
 			<h1>2) Denominación de artículos y propiedades incluidas</h1>
+			
 			<%= render partial: "grupos", object: f %>
 		<% else %>	
 			<h2>2) No hay artículos en esta familia</h1>

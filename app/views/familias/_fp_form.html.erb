@@ -1,8 +1,10 @@
-	<%= form_for(fp_form, url: {  method: "post", action: "edit_familias_propiedades"}) do |f| %>
+	<%= form_for( fp_form, url: {  method: "post", action: "edit_familias_propiedades"}) do |f| %>
+	
 		<div class="table-responsive">
 		<table class="table table-hover">
   		<thead>
 	    	<tr>
+		  	<th>Cod</th>
 		  	<th>Propiedad</th>
       	  	<th>valor</th>
       		<th></th>
@@ -16,23 +18,29 @@
 			<%= f.fields_for :familias_propiedades do |fp_form| %>
 			<tr>	 
    					
-	   			<td> <%= fp_form.collection_select(:propiedad_id, Propiedad.all, :id, :tcorto,  {class:	"col-sm-10"})%> </td>	
+	   			<td> <%= fp_form.text_field :cod ,  class: "col-sm-5"%> </td>
+	   			<td> <%= fp_form.collection_select(:propiedad_id, Propiedad.all, :id, :tcorto,  {class:	"col-sm-12"})%> </td>
 			   	<td> <%= fp_form.text_field :valor ,  class: "col-sm-10"%> </td>
-			   	
+			   	<td><%= link_to 'Valores ligados',  familia_familias_propiedad_path(fp_form.object.id, :id => fp_form.object.id) %></td>
 			   	<td class="danger">
 	   				<%= fp_form.check_box '_destroy'  %> </td>
 	   			<td ><%= fp_form.label '_destroy',"Borrar propiedad y valor", class: "info"  %>
 	   				</td>	
+	   			
 	        </tr>
 	       
 			<% end %>
 			<tr>
-				<th> Añadir nueva propiedad/valor</th>
+				<th> Añadir nuevo Cod/Propiedad/Valor</th>
 			</tr>
 			<tr>
 				<td>
+					<%= text_field_tag(:new_cod,nil,class: "col-sm-10")  %>
+				</td>
+				<td>
 					<%= select_tag(:new_prop, options_from_collection_for_select(Propiedad.all, :id, :tcorto),:prompt => "Seleccione propiedad a añadir", :selected => nil, :html => {class: "col-sm-10"}) %>
 				</td>
+				
 				<td>
 					<%= text_field_tag(:new_valor,nil,class: "col-sm-10")  %>
 				</td>

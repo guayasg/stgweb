@@ -10,6 +10,7 @@ class FamiliasPropiedadesController < ApplicationController
   # GET /familias_propiedades/1
   # GET /familias_propiedades/1.json
   def show
+    @fp=FamiliaPropiedad.find(params[:id])
   end
 
   # GET /familias_propiedades/new

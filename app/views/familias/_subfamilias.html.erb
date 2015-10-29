@@ -30,7 +30,7 @@
         <td><%= familia.orden %></td>
         
         <td><%= link_to 'Mostrar', familias_path(:id => familia.id) %></td>
-        <td><%= link_to 'editar', edit_familia_path(familia,:familia_id => @id) %></td>
+        <td><%= link_to 'editar', edit_familia_path(familia,:familia_id => familia.id) %></td>
         
         <td>
         	<!-- <%= button_to 'eliminar', familias_path(familia: familia.id, method: :destroy) ,remote: true, method: :delete, data: { confirm: 'Are you sure?' } %> !-->

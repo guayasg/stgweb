@@ -18,7 +18,7 @@ class FamiliasController < ApplicationController
   def index
     familias_tree(params[:id].to_i)
     @familia_filtrada = @familias.select { |f| f.padre_id == (params[:id].to_i == 0 ? nil :params[:id].to_i) } # familias incluidas
-    @opciones=[['Seleccione Opción',0],['Generar Todos los artículos',1],['Aplicar cambios a artículos seleccionados',2]]
+    #@opciones=[['Seleccione Opcción',0],['Generar Todos los artículos',1],['Aplicar cambios a artículos seleccionados',2]]
     if @id != 0
       @fam_prop = Familia.find(@id) # familias_propiedades
       #@nombres_articulos=Familia.find_by_sql("select * from mod_articulos_nombre(#{params[:id]},array[]::integer[],array[]::integer[],array[]::integer[]) ");
@@ -103,12 +103,14 @@ def componer_articulo
     ordenar(i,id)
   else #regenerar artículos
     @a=Familia.connection.select_values("select mod_propiedades_generar_grupos(#{params[:id]},0) as ret")
+    flash[:notice2] = @a[0].slice(0,500) if @a[0] && @a[0]!='OK'# Si algún elmento queda repetido=>se informa (no se generan los artículos)
+    
   end  
   
   
         respond_to do |format|   
           #format.html { render inline: "c= <%= @c %> <br> b= <%=  @b %>"  } 
-          format.html { redirect_to :action => :index, :id => params[:familia][:id]}
+          format.html { redirect_to  :action => :index, :id => params[:familia][:id]}
           format.json { head :no_content }
           format.html { render action: 'edit' }
 
@@ -116,19 +118,28 @@ def componer_articulo
 end
 
 def edit_familias_propiedades
-        
-    notsave=update_all_modelo FamiliaPropiedad,params[:familia][:familias_propiedades_attributes] 
-    if params[:new_prop]!="" && params[:new_valor]!=""
-      FamiliaPropiedad.create(:familia_id => params[:familia][:id].to_i,:propiedad_id => params[:new_prop], :valor => params[:new_valor])
+    notsave=[]
+    
+    FamiliaPropiedad.transaction do    
+      notsave=update_all_modelo FamiliaPropiedad,params[:familia][:familias_propiedades_attributes] 
+      if params[:new_cod]!="" &&  params[:new_prop]!="" && params[:new_valor]!=""
+        FamiliaPropiedad.create(:familia_id => params[:familia][:id].to_i,:propiedad_id => params[:new_prop], :valor => params[:new_valor])
+      end
+      
     end 
         
         respond_to do |format|   
         if notsave.empty?
+          #format.html { render action: :index, :id => @id }
           #format.html { render action: 'index'  } 
-          format.html { redirect_to :action => :index, :id => params[:familia][:id]  }
+          format.html { redirect_to :action => :index, :id => params[:familia][:id], notice: "Valores Guardados"  }
           format.json { head :no_content }
         else
-          format.html { render action: :index, :id => params[:familia][:id] }
+             #format.html { render action: :index, :id => params[:familia][:id] }
+             notsave.each do |n|
+               flash[:notice] = "Cod "  + n.cod + " " + n.errors.messages.values.flatten.to_s
+             end
+             format.html { redirect_to :action => :index, :id => params[:familia][:id]  }
         end
       end
 
@@ -180,10 +191,10 @@ def create_familia_propiedad
         return
      end
      
-     if params[:familia]["articulos_grupopropiedades_attributes"]
-        #componer_articulo
-        return
-     end 
+     #if params[:familia]["articulos_grupopropiedades_attributes"]
+#        componer_articulo
+#       return
+     #end 
        
       respond_to do |format|
         if @familia.update(familia_params) 
