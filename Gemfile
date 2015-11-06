@@ -36,7 +36,7 @@ group :doc do
 end
 
 
-#para eliminar items
+#para eliminar items                                                            
 gem 'coffee-script-source', '1.8.0'
 
 #paginación

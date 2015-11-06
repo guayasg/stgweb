@@ -20,9 +20,10 @@ class FamiliasController < ApplicationController
     @familia_filtrada = @familias.select { |f| f.padre_id == (params[:id].to_i == 0 ? nil :params[:id].to_i) } # familias incluidas
     #@opciones=[['Seleccione Opcción',0],['Generar Todos los artículos',1],['Aplicar cambios a artículos seleccionados',2]]
     if @id != 0
+      @k=flash[:success] ? :success : (flash[:danger] ? :danger : nil) # componemos la clave para mensajes de error
       @fam_prop = Familia.find(@id) # familias_propiedades
       #@nombres_articulos=Familia.find_by_sql("select * from mod_articulos_nombre(#{params[:id]},array[]::integer[],array[]::integer[],array[]::integer[]) ");
-      @nombres_articulos=Familia.connection.select_all("select * from mod_articulos_nombre(#{@id},array[]::integer[],array[]::integer[],array[]::integer[]) ")
+      #@nombres_articulos=Articulos.where(familia_id: @id)#Familia.connection.select_all("select * from mod_articulos_nombre(#{@id},array[]::integer[],array[]::integer[],array[]::integer[]) ")
       @propiedades_familia=Familia.connection.select_values("select propiedad_valor,id from mod_propiedades_elementos_combinatoria(#{@id})") 
     end
   end
@@ -99,13 +100,11 @@ def componer_articulo
   #se llama a la función de BD que compone los nombres de artículos
   i=params["subir"] || params["bajar"] # i contiene el artículo (id) a subir o bajr de orden
   id= params[:fp][i] if i #id contiene el id de familia o familia_propiedad que hay que ordenar (subir o bajar de orden)
-  if id
-    ordenar(i,id)
-  else #regenerar artículos
-    @a=Familia.connection.select_values("select mod_propiedades_generar_grupos(#{params[:id]},0) as ret")
-    flash[:notice2] = @a[0].slice(0,500) if @a[0] && @a[0]!='OK'# Si algún elmento queda repetido=>se informa (no se generan los artículos)
-    
-  end  
+  ordenar(i,id) if id
+ #regenerar artículos
+   @a=Familia.connection.select_values("select mod_propiedades_generar_grupos(#{params[:id]},0) as ret")
+   k = (@a[0] && @a[0].slice(0,2)!='OK' ? :danger : :success) 
+   flash[k] = @a[0].slice(0,500) # Si algún elmento queda repetido=>se informa (no se generan los artículos)
   
   
         respond_to do |format|   

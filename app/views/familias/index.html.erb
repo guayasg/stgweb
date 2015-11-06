@@ -16,9 +16,11 @@
   <%if @fam_prop %>
 	<%= form_for(@fam_prop, :action => 'componer_articulo', :method => "post") do |f| %>
 		<%= f.hidden_field :id %>
-		<% if flash[:notice2] %>
-			<div class="alert alert-danger"><%= flash[:notice2] %></div>
+		
+		<% if @k %> 
+			<div class="alert alert-<%= @k.to_s %>" > <%= flash[@k] %></div> 
 		<% end %>
+		
 		<% if @fam_prop.articulos.count > 0%>
 			<h1>2) Denominación de artículos y propiedades incluidas</h1>
 			

@@ -14,6 +14,8 @@ ActiveSupport::Inflector.inflections do |inflect|
   inflect.singular /([rlnd])es([A-Z]|_|$)/, '\1\2'
 
   inflect.plural 'familia', 'familias'
+  inflect.plural 'familia_propiedad', 'familias_propiedades'
+  inflect.plural 'familias_valorligado', 'familias_valoresligados'
 end
 
 ActiveRecord::Base.pluralize_table_names = false

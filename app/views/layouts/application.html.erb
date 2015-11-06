@@ -8,20 +8,115 @@
             <%= stylesheet_link_tag :all,'bootstrap', media: 'all'%>
             <%= javascript_include_tag :application, :all, :cache => true %>
             <%= csrf_meta_tags %>
+            
     </head>
     <body>
+   
+   <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Project name</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Contact</a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Action</a></li>
+                  <li><a href="#">Another action</a></li>
+                  <li><a href="#">Something else here</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li class="dropdown-header">Nav header</li>
+                  <li><a href="#">Separated link</a></li>
+                  <li><a href="#">One more separated link</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active"><a href="./">Default <span class="sr-only">(current)</span></a></li>
+              <li><a href="../navbar-static-top/">Static top</a></li>
+              <li><a href="../navbar-fixed-top/">Fixed top</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+
+      <!-- Main component for a primary marketing message or call to action -->
+    
+
+    </div> <!-- /container -->
+<ul class="nav navbar-nav navbar-right">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <span class="caret"></span></a>
+    <ul class="dropdown-menu" role="menu">
+      <li><a href="#">Login</a></li>
+      <li class="divider"></li>
+      
+    </ul>
+  </li>
+</ul>
+
+
+<ul class="nav navbar-nav navbar-right">
+  <li class="dropdown">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu <span class="caret"></span></a>
+    <li class="dropdown-submenu">
+    	<a tabindex="-1" href="#">More options</a>
+      <li><a href="#">Login</a><
+      	<ul class="dropdown-menu">
+      		<li class="divider"></li>
+      
+    	</ul>
+  	  </li>
+  	</li>
+</ul>
+
+
+
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+      ...
+      <li class="dropdown-submenu">
+        <a tabindex="-1" href="#">More options</a>
+        <ul class="dropdown-menu">
+          ...
+        </ul>
+      </li>
+    </ul>
+
+    	
+    	
         <div class="container">
                 <div class="row">
                       <div class="span9"><%= yield %></div>
                       <div class="span3">
                          <h2>Sobre Nosotros</h2>
+                         
                  </div>
        </div>
         </div>
         <!--http://stackoverflow.com/questions/10123354/twitter-bootstrap-in-rails-3-2-3
         	https://librosweb.es/libro/introduccion_rails/capitulo_5.html
         	http://pullmonkey.com/2008/3/30/dynamic-select-boxes-ruby-on-rails
-        	http://railscasts.com/episodes/205-unobtrusive-javascript?language=es&view=asciicast/-->
+        	http://railscasts.com/episodes/205-unobtrusive-javascript?language=es&view=asciicast
+        	http://docs.bootcss.com/bootstrap-1.4.0/docs/javascript.html
+        	http://www.gotealeaf.com/blog/integrating-rails-and-bootstrap-part-3
+        	http://www.opinionatedprogrammer.com/2011/11/twitter-bootstrap-on-rails/
+        	http://blog.makeitreal.camp/modales-bootstrap-ruby-on-rails/
+        	http://railscasts.com/episodes/196-nested-model-form-part-1?language=es&view=asciicast
+        	/-->
+        	
+        	
+	
+        	
     </body>
 </html>
 

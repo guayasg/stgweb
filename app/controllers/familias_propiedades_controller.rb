@@ -11,6 +11,7 @@ class FamiliasPropiedadesController < ApplicationController
   # GET /familias_propiedades/1.json
   def show
     @fp=FamiliaPropiedad.find(params[:id])
+    
   end
 
   # GET /familias_propiedades/new
@@ -70,6 +71,6 @@ class FamiliasPropiedadesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def familia_propiedad_params
-      params[:familia_propiedad]
+      params.require(:familia_propiedad).permit(familias_valoresligados_attributes: [:id, :_destroy])
     end
 end
