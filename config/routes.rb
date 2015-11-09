@@ -4,7 +4,6 @@ Stgweb::Application.routes.draw do
   
   resources :familias do
 
-    resources :familias_propiedades 
     post 'componer_articulo', on: :collection
     post 'edit_familias_propiedades', on: :collection
     
@@ -13,10 +12,18 @@ Stgweb::Application.routes.draw do
     
     
   end
+#    get 'familias_propiedades/:id', to: 'familias_propiedades#show', as: 'familias_propiedades'  
     #post 'familias/:id', to: 'familias#edit_familias_propiedades'
     post 'familias/:id', to: 'familias#componer_articulo'
     
     
+    
+  
+  resources :familias_propiedades do
+    resources :familias_valoresligados
+  end  
+  
+  
   
   
   resources :propiedades

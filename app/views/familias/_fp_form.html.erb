@@ -21,7 +21,7 @@
 	   			<td> <%= fp_form.text_field :cod ,  class: "col-sm-5"%> </td>
 	   			<td> <%= fp_form.collection_select(:propiedad_id, Propiedad.all, :id, :tcorto,  {class:	"col-sm-12"})%> </td>
 			   	<td> <%= fp_form.text_field :valor ,  class: "col-sm-10"%> </td>
-			   	<td><%= link_to 'Valores ligados',  familia_familias_propiedad_path(fp_form.object.id, :id => fp_form.object.id) %></td>
+			   	<td><%= link_to fp_form.object.familias_valoresligados.size.to_s + ' Valores ligados',  familias_propiedad_path(fp_form.object.id, :ruta => @ruta) %></td>
 			   	<td class="danger">
 	   				<%= fp_form.check_box '_destroy'  %> </td>
 	   			<td ><%= fp_form.label '_destroy',"Borrar propiedad y valor", class: "info"  %>

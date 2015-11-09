@@ -1,5 +1,66 @@
 <p id="notice"><%= notice %></p>
-<%= @fp.familias_valoresligados.size %>
+<h2>Visionando los valores ligados de: </h2>
+<kbd> <%= params[:ruta] %>  
+<%= @fp.propiedad.tlargo + ": "+  @fp.valor %>
+</kbd>
+<table class="table table-hover">
+<thead>
+   	<tr>
+	  	<th>Propiedad</th>
+   	  	<th>valor</th>
+      		<th></th>
+      		<th></th>	
+    		</tr>
+</thead>
+		<tbody>
+			
+			<%# @fp.familias_valoresligados.each do |valor_ligado|
+			%>
+			<%=# valor_ligado.familia_propiedadligada.propiedad.tlargo 
+				%>
+			<%=# valor_ligado.familia_propiedadligada.valor 
+				%>
+				 
+			<%= form_for @fp, :url => {action: "update"} do |f| %>
+				<%= f.fields_for :familias_valoresligados do |v| %>
+			<tr>
+					<td><%= v.object.propiedad.tlargo %> </td>
+					<td><%= v.object.familia_propiedadligada.valor %> </td>
+					<td><%= v.check_box :_destroy %> </td>
+  					<td><%= v.label :_destroy, "Borrar valor ligado" %> </td>
+  			</tr>
+			<% end %>
+			<tr>
+  					<td><%= f.submit "Eliminar valores ligados marcados", class: "btn btn-warning"%></td>
+  			</tr>
+			<% end %>
+	
+			
+			
+			
+			<%= form_for @fp.familias_valoresligados.build, :url => {action: "create"} do |f| %>
+			    <tr><td><h3>añadir nuevo valor ligado para: </h3></td></tr>
+				<tr>
+						<td><kbd> <%= params[:ruta] %>  
+							<%= @fp.propiedad.tlargo + ": "+  @fp.valor %>
+							</kbd>
+						</td>
+						<td><%= f.text_field :fp2_id %></td>
+				</tr>
+				<tr>
+						<td><%= f.submit "Crear Valor ligado", class: "btn btn-warning"%></td>
+				</tr>
+				<% end %>
 
+		</tbody>
+			
+	</table>
+			
+	        
+			
+			
 
-
+			<%# form_for ([@fp,@fp.familias_valoresligados.build]) do |f| 
+			%>
+			<%# end 
+			%>

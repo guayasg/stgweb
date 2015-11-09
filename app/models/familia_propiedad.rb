@@ -1,17 +1,19 @@
 class FamiliaPropiedad < ActiveRecord::Base
   self.table_name = "familias_propiedades"
   has_many :articulos_propiedades
-  has_one :familia_valorligado, inverse_of: :familias_propiedades
+  has_one :familia_valorligado 
   has_many :familias_valoresligados, class_name: "FamiliaValorligado", foreign_key: "fp_id"
   belongs_to :familia
   belongs_to :propiedad
+  accepts_nested_attributes_for :familias_valoresligados , :allow_destroy => true
   validates :cod, length: { maximum: 10, too_long: "%{count} caracteres es lo máximo para codificar el código" }
 end
 
 class FamiliaValorligado < ActiveRecord::Base
   self.table_name = "familias_valoresligados"
   belongs_to :familia_propiedad, foreign_key: "fp_id", inverse_of: :familia_valorligado
-  belongs_to :familia_propiedad, foreign_key: "fp2_id", inverse_of: :familias_valoresligados
+  belongs_to :familia_propiedadligada, class_name: "FamiliaPropiedad", foreign_key: "fp2_id"
+  has_one :propiedad, through: :familia_propiedadligada
 end
 
 

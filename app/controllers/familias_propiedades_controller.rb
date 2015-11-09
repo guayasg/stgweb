@@ -11,6 +11,8 @@ class FamiliasPropiedadesController < ApplicationController
   # GET /familias_propiedades/1.json
   def show
     @fp=FamiliaPropiedad.find(params[:id])
+    @valoresligados_elegibles=FamiliaPropiedad.connection.select_values("select valor,id from mod_propiedades_valoresligados_pdtes(#{@fp.id})")
+    
   end
 
   # GET /familias_propiedades/new
@@ -26,6 +28,7 @@ class FamiliasPropiedadesController < ApplicationController
   # POST /familias_propiedades.json
   def create
     @familia_propiedad = FamiliaPropiedad.new(familia_propiedad_params)
+    
 
     respond_to do |format|
       if @familia_propiedad.save
@@ -70,6 +73,6 @@ class FamiliasPropiedadesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def familia_propiedad_params
-      params[:familia_propiedad]
+      params.require(:familia_propiedad).permit(familias_valoresligados_attributes: [:id, :_destroy])
     end
 end

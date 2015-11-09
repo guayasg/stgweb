@@ -20,35 +20,47 @@
 
 		<tbody>
 			
-				<%= grupos.fields_for :articulos do |grupo_form| %>
+				<%= grupos.fields_for :articulos do |articulo| %>
 				<tr>	 
 		   			<td class="col-sm-3"> 
-		   				  <%= select_tag(:fp_id, options_from_collection_for_select(Propiedad.find_by_sql("select * from mod_familia_propiedad_grupo_bsc(#{grupo_form.object.id})"), :id, :describe),{name: "fp[#{grupo_form.object.id}]", multiple: true, size: 8})%>
+		   				  <%= select_tag(:fp_id, options_from_collection_for_select(Propiedad.find_by_sql("select * from mod_familia_propiedad_grupo_bsc(#{articulo.object.id})"), :id, :describe),{name: "fp[#{articulo.object.id}]", multiple: true, size: 8})%>
 		   			</td>
 		   			
 					<td class="col-sm-1">
-		   				  <%= button_tag  "subir_orden", {value: grupo_form.object.id, name: "subir" , class: "btn btn-default", id: 'subir_articulo', :padre_id => @id, :grupo_id => grupo_form.object.id} do %>
+		   				  <%= button_tag  "subir_orden", {value: articulo.object.id, name: "subir" , class: "btn btn-default", id: 'subir_articulo', :padre_id => @id, :grupo_id => articulo.object.id} do %>
 		   					  <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span> Subir orden
 		   	 			  <% end %>
   		   				 <br>
-		   	 			 <%= button_tag  "bajar_orden",{value: grupo_form.object.id, name: "bajar", class: "btn btn-default", id: 'bajar_articulo',:padre_id => @id, :grupo_id => grupo_form.object.id} do %>
+		   	 			 <%= button_tag  "bajar_orden",{value: articulo.object.id, name: "bajar", class: "btn btn-default", id: 'bajar_articulo',:padre_id => @id, :grupo_id => articulo.object.id} do %>
 		   					  <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span> Bajar orden
 		   	 			  <% end %>
 		   	 		</td>
   		   		
   
 		   			<td class="col-sm-1">
-		   				<%= @nombres_articulos[grupo_form.index]["cod"] %>
+		   				<%= 
+		   					articulo.object.codarticulo
+		   				# @nombres_articulos[grupo_form.index]["cod"] 
+		   				%>
 		   			</td>
 
 
 		   			<td class="col-sm-1">
-		   				<%= @nombres_articulos[grupo_form.index]["nomcorto"] %>
+		   				<%=
+		   				articulo.object.nomcorto
+		   				#@nombres_articulos[grupo_form.index]["nomcorto"] 
+		   				%>
 		   			</td>
 		   			<td class="col-sm-1">
-		   				<%= @nombres_articulos[grupo_form.index]["nomlargo"] %>
+		   				<%=
+		   					articulo.object.nomlargo
+		   					#@nombres_articulos[grupo_form.index]["nomlargo"] 
+		   				%>
 		   			<td class="col-sm-1">	
-		   				<%= @nombres_articulos[grupo_form.index]["nomcomercial"] %>
+		   				<%=
+		   					articulo.object.nomcomercial
+		   					# @nombres_articulos[grupo_form.index]["nomcomercial"] 
+		   				%>
 		   			</td>
 		   			<td class="col-sm-1">
 		   			</td>
