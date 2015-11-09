@@ -982,8 +982,8 @@ CREATE INDEX idx_familias_propiedades_propiedad_id ON familias_propiedades USING
 drop table if exists familias_valoresligados;
 create table familias_valoresligados( -- 
 id serial primary key,
-fp_id integer references familias_propiedades(id) match full on update cascade on delete cascade,
-fp2_id integer references familias_propiedades(id) match full on update cascade on delete cascade,
+fp_id integer references familias_propiedades(id) match full on update cascade on delete cascade not null,
+fp2_id integer references familias_propiedades(id) match full on update cascade on delete cascade not null,
 unique (fp_id,fp2_id)
 ); --Se suma el valor del id de la última familia creada último 
 insert into familias_valoresligados (fp_id,fp2_id) values (1 + 98,17 + 98);
