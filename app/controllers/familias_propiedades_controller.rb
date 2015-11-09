@@ -11,6 +11,7 @@ class FamiliasPropiedadesController < ApplicationController
   # GET /familias_propiedades/1.json
   def show
     @fp=FamiliaPropiedad.find(params[:id])
+
     @valoresligados_elegibles=FamiliaPropiedad.connection.select_values("select valor,id from mod_propiedades_valoresligados_pdtes(#{@fp.id})")
     
   end
