@@ -21,8 +21,9 @@ Stgweb::Application.routes.draw do
   
   resources :familias_propiedades do
     resources :familias_valoresligados
+    
   end  
-  
+  post 'familias_propiedades/:id', to: 'familias_propiedades#create'
   
   
   

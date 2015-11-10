@@ -12,6 +12,9 @@ class FamiliasPropiedadesController < ApplicationController
   def show
     @fp=FamiliaPropiedad.find(params[:id])
     
+    #@fp.familias_valoresligados.new
+    @valoresligadospdtes=FamiliaPropiedad.connection.select_rows("select valor,id from mod_propiedades_valoresligados_pdtes (#{@fp.id})")
+    #@valoresligadospdtes=@valoresligadospdtes[0]
   end
 
   # GET /familias_propiedades/new
@@ -71,6 +74,6 @@ class FamiliasPropiedadesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def familia_propiedad_params
-      params.require(:familia_propiedad).permit(familias_valoresligados_attributes: [:id, :_destroy])
+      params.require(:familia_propiedad).permit(familias_valoresligados_attributes: [:id, :fp_id,:fp2_id, :_destroy])
     end
 end

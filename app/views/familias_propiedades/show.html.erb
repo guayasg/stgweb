@@ -3,6 +3,7 @@
 <kbd> <%= params[:ruta] %>  
 <%= @fp.propiedad.tlargo + ": "+  @fp.valor %>
 </kbd>
+<%= debug(params) %>
 <table class="table table-hover">
 <thead>
    	<tr>
@@ -20,37 +21,43 @@
 				%>
 			<%=# valor_ligado.familia_propiedadligada.valor 
 				%>
-				 
+
+			
 			<%= form_for @fp, :url => {action: "update"} do |f| %>
 				<%= f.fields_for :familias_valoresligados do |v| %>
+					<tr>
+						<td><%= v.object.propiedad.tlargo %> </td>
+					
+							<td><%= v.object.familia_propiedadligada.valor %> </td>
+							<td><%= v.check_box :_destroy %> </td>
+  							<td><%= v.label :_destroy, "Borrar valor ligado" %> </td>
+  					</tr>
+  				<% end %>
 			<tr>
-					<td><%= v.object.propiedad.tlargo %> </td>
-					<td><%= v.object.familia_propiedadligada.valor %> </td>
-					<td><%= v.check_box :_destroy %> </td>
-  					<td><%= v.label :_destroy, "Borrar valor ligado" %> </td>
-  			</tr>
-			<% end %>
+				<td><%= f.submit "Eliminar valores ligados marcados", class: "btn btn-warning"%></td>
+			</tr>	
+			<%end %>
+			<% @fp.familias_valoresligados.build%>
+			<%= form_for @fp, :url => {action: "update"} do |f| %>
+				<%= f.fields_for :familias_valoresligados do |v| %>
+					<% if !v.object.propiedad %>
+					<tr>
+  						<td><%= v.hidden_field :fp_id, value: v.object.fp_id %>
+  							<h4>Añadir Nueva Propiedad Ligada:</h4> 
+  							<%= v.select(:fp2_id, options_for_select(@valoresligadospdtes),:prompt => "Seleccionar Nuevo valor Ligado") %></td>
+  					</tr>
+  					<% end %>
+  				<% end %>
 			<tr>
-  					<td><%= f.submit "Eliminar valores ligados marcados", class: "btn btn-warning"%></td>
-  			</tr>
-			<% end %>
-	
+				<td><%= f.submit "Insertar Nuevo Valor Ligado", class: "btn btn-warning"%></td>
+			</tr>	
+			<%end %>
+
+
+  
+		
 			
 			
-			
-			<%= form_for @fp.familias_valoresligados.build, :url => {action: "create"} do |f| %>
-			    <tr><td><h3>añadir nuevo valor ligado para: </h3></td></tr>
-				<tr>
-						<td><kbd> <%= params[:ruta] %>  
-							<%= @fp.propiedad.tlargo + ": "+  @fp.valor %>
-							</kbd>
-						</td>
-						<td><%= f.text_field :fp2_id %></td>
-				</tr>
-				<tr>
-						<td><%= f.submit "Crear Valor ligado", class: "btn btn-warning"%></td>
-				</tr>
-				<% end %>
 
 		</tbody>
 			
