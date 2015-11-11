@@ -932,27 +932,31 @@ $BODY$
 
 select mod_propiedades_valoresligados_pdtes(103)
 
-CREATE OR REPLACE FUNCTION mod_propiedades_valoresligados_pdtes  (IN integer, Out valor text, OUT id integer)
+CREATE OR REPLACE FUNCTION mod_propiedades_valoresligados_pdtes(IN integer, Out valor text, OUT id integer)
   RETURNS SETOF record AS
 $BODY$
 -- Función que calcula los elementos que se pueden visualizar en la interface de valoresligados. 
 --Se le pasa un id de familias_propiedades, y devolverá todos las propiedade con sus valores (en formato texto) con los posibles candidatos a  ponerse como valor ligado
 declare
   p_fp_id alias for $1;
-  p_prop integer;
+  p_familia_id integer;
+  p_propiedad_id integer;
 begin
-	select propiedades.id into p_prop
-	from familias_prpropied
+	select familia_id,propiedad_id into p_familia_id, p_propiedad_id
+	from familias_propiedades f 
+	where f.id=p_fp_id;
+
+	p_familia_id:=coalesce(p_familia_id,-1);	
 	
 	return query
 		with valores as (
-			select t.propiedad||': '||t.valor as valor,t.familia_propiedad_id,t.ptopiedad_id
-			from mod_propiedades_heredadas_bsc(1,false) t
+			select t.propiedad||': '||t.valor as valor,t.familia_propiedad_id, t.propiedad_id
+			from mod_propiedades_heredadas_bsc(p_familia_id,false) t
 			where propiedad_id is not null and t.propiedad_id is not null
 		)
 		select valores.valor,valores.familia_propiedad_id 
 		from valores 
-		where propiedad_id<>p_fp_id 
+		where valores.propiedad_id<>p_propiedad_id 
 		except
 		select propiedades.tlargo||': '||f.valor as valor, v.fp2_id
 		from valores inner join familias_valoresligados v on valores.familia_propiedad_id=v.fp_id 
@@ -962,6 +966,7 @@ end;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100
+
   ROWS 1000;
 
 select familia_id,propiedad_id 
@@ -982,3 +987,5 @@ with valores as (
 		from valores inner join familias_valoresligados v on valores.familia_propiedad_id=v.fp_id 
 			inner join familias_propiedades f on v.fp2_id=f.id inner join propiedades on f.propiedad_id=propiedades.id
 		order by valor;
+  ROWS 1000;
+
