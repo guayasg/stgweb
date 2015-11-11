@@ -964,4 +964,21 @@ $BODY$
   COST 100
   ROWS 1000;
 
+select familia_id,propiedad_id 
+	from familias_propiedades f 
+	where f.id=178;
 
+
+with valores as (
+			select t.propiedad||': '||t.valor as valor,t.familia_propiedad_id, t.propiedad_id
+			from mod_propiedades_heredadas_bsc(14,false) t
+			where propiedad_id is not null and t.propiedad_id is not null
+		)
+		select valores.valor,valores.familia_propiedad_id 
+		from valores 
+		--where valores.propiedad_id<>23 
+		except
+		select propiedades.tlargo||': '||f.valor as valor, v.fp2_id
+		from valores inner join familias_valoresligados v on valores.familia_propiedad_id=v.fp_id 
+			inner join familias_propiedades f on v.fp2_id=f.id inner join propiedades on f.propiedad_id=propiedades.id
+		order by valor;
