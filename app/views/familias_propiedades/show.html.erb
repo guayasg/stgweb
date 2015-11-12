@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+
 <h2>Visionando los valores ligados de: </h2>
 <kbd> <%= params[:ruta] %>  
 <%= @fp.propiedad.tlargo + ": "+  @fp.valor %>
@@ -15,15 +15,13 @@
 </thead>
 		<tbody>
 			
-			<%# @fp.familias_valoresligados.each do |valor_ligado|
-			%>
-			<%=# valor_ligado.familia_propiedadligada.propiedad.tlargo 
-				%>
-			<%=# valor_ligado.familia_propiedadligada.valor 
-				%>
+		  <% if flash[@k] %> 
+				<div class="alert alert-<%= @k.to_s %>" > <%= flash[@k] %></div> 
+		  <% end %>
 
 			
 			<%= form_for @fp, :url => {action: "update"} do |f| %>
+				<td><%= hidden_field_tag :ruta,  params[:ruta] %>
 				<%= f.fields_for :familias_valoresligados do |v| %>
 					<tr>
 						<td><%= v.object.propiedad.tlargo %> </td>
@@ -31,14 +29,16 @@
 							<td><%= v.object.familia_propiedadligada.valor %> </td>
 							<td><%= v.check_box :_destroy %> </td>
   							<td><%= v.label :_destroy, "Borrar valor ligado" %> </td>
+  							
   					</tr>
   				<% end %>
 			<tr>
 				<td><%= f.submit "Eliminar valores ligados marcados", class: "btn btn-warning"%></td>
 			</tr>	
 			<%end %>
-			<% @fp.familias_valoresligados.build%>
+			<% @fp.familias_valoresligados.build %>
 			<%= form_for @fp, :url => {action: "update"} do |f| %>
+				<td><%= hidden_field_tag :ruta,  params[:ruta] %>
 				<%= f.fields_for :familias_valoresligados do |v| %>
 					<% if !v.object.propiedad %>
 					<tr>
@@ -53,21 +53,10 @@
 			</tr>	
 			<%end %>
 
-
-  
-		
-			
-			
-
 		</tbody>
 			
 	</table>
 			
-	        
+	<%= link_to 'Volver a la Familia ' + @fp.familia.describe, familias_path(id: @fp.familia.id)%>	        
 			
 			
-
-			<%# form_for ([@fp,@fp.familias_valoresligados.build]) do |f| 
-			%>
-			<%# end 
-			%>
