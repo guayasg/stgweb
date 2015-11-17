@@ -7,6 +7,8 @@ class FamiliaPropiedad < ActiveRecord::Base
   belongs_to :propiedad
   accepts_nested_attributes_for :familias_valoresligados , :allow_destroy => true
   validates :cod, length: { maximum: 10, too_long: "%{count} caracteres es lo máximo para codificar el código" }
+  validates :separador, length: { maximum: 1 , message: "El separador debe 1 caracter"}
+  default_scope order(:propiedad_id, :valor)
 end
 
 class FamiliaValorligado < ActiveRecord::Base

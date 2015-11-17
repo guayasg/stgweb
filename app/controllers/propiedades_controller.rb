@@ -5,6 +5,7 @@ class PropiedadesController < ApplicationController
   # GET /propiedades.json
   def index
     @propiedades = Propiedad.all
+    
   end
 
   # GET /propiedades/1

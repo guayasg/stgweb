@@ -121,8 +121,8 @@ def edit_familias_propiedades
     
     FamiliaPropiedad.transaction do    
       notsave=update_all_modelo FamiliaPropiedad,params[:familia][:familias_propiedades_attributes] 
-      if params[:new_cod]!="" &&  params[:new_prop]!="" && params[:new_valor]!=""
-        FamiliaPropiedad.create(:familia_id => params[:familia][:id].to_i,:propiedad_id => params[:new_prop], :valor => params[:new_valor])
+      if params[:new_cod]!="" &&  params[:new_prop]!="" && params[:new_valor]!="" && params[:new_separador]!=""
+        FamiliaPropiedad.create(:familia_id => params[:familia][:id].to_i,:propiedad_id => params[:new_prop], :valor => params[:new_valor], :cod=> params[:new_cod],:separador=> params[:new_separador])
       end
       
     end 

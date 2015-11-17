@@ -5,6 +5,7 @@
 
   <thead>
     <tr>
+      <th>Cod. Propiedad</th>	
       <th>Texto Corto</th>
       <th>Texto Largo</th>
       <th>Texto Comercial</th>
@@ -23,6 +24,7 @@
     <% @propiedades.each do |propiedad| %>
      
       <tr>
+      	<td><%= propiedad.codpropiedad %></td>
         <td><%= propiedad.tcorto %></td>
         <td><%= propiedad.tlargo %></td>
         <td><%= propiedad.tcomercial %></td>
@@ -31,10 +33,11 @@
         <td><%= PropiedadesComponer.find(propiedad.componertcomercial_id).describe %></td>
 
         <td><%= truefalse_view(propiedad.propnumerica) %></td>
+        
         <td><%= link_to 'Mostrar Detalle', propiedad %></td>
         <td><%= link_to 'Editar', edit_propiedad_path(propiedad) %></td>
         <td><span class="label label-danger">
-        	<%= link_to 'Eliminar', propiedad, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        	<%= link_to 'Eliminar', propiedad, method: :delete, data: { confirm: '¿Estás seguro de querer eliminar esta propiedad?' } %></td>
         	</span>
       </tr>
 
