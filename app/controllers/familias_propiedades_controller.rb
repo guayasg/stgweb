@@ -11,6 +11,7 @@ class FamiliasPropiedadesController < ApplicationController
   # GET /familias_propiedades/1.json
   def show
     @fp=FamiliaPropiedad.find(params[:id])
+    @k=flash[:success] ? :success : (flash[:danger] ? :danger : nil)  
 
     @valoresligados_elegibles=FamiliaPropiedad.connection.select_values("select valor,id from mod_propiedades_valoresligados_pdtes(#{@fp.id})")
     
@@ -36,10 +37,11 @@ class FamiliasPropiedadesController < ApplicationController
 
     respond_to do |format|
       if @familia_propiedad.save
-        format.html { redirect_to @familia_propiedad, notice: 'Familia propiedad was successfully created.' }
+        format.html { redirect_to @familia_propiedad}
         format.json { render action: 'show', status: :created, location: @familia_propiedad }
       else
-        format.html { render action: 'new' }
+        
+        format.html { render action: 'show' }
         format.json { render json: @familia_propiedad.errors, status: :unprocessable_entity }
       end
     end
@@ -48,12 +50,13 @@ class FamiliasPropiedadesController < ApplicationController
   # PATCH/PUT /familias_propiedades/1
   # PATCH/PUT /familias_propiedades/1.json
   def update
+    ruta=params[:ruta]
     respond_to do |format|
       if @familia_propiedad.update(familia_propiedad_params)
-        format.html { redirect_to @familia_propiedad, notice: 'Familia propiedad was successfully updated.' }
+        format.html { redirect_to @familia_propiedad ,:ruta => ruta, :flash => {:success => 'Valor/es  ligado correctamente guardado/Eliminado'} }
         format.json { head :no_content }
       else
-        format.html { render action: 'edit' }
+        format.html { render action: @familia_propiedad,:ruta => params[:ruta],:flash => {:danger => 'Valor ligado No se pudo guardar'} }
         format.json { render json: @familia_propiedad.errors, status: :unprocessable_entity }
       end
     end
