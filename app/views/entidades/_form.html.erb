@@ -1,0 +1,41 @@
+<%= form_for(@entidad) do |f| %>
+  <% if @entidad.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@entidad.errors.count, "error") %> prohibited this entidad from being saved:</h2>
+
+      <ul>
+      <% @entidad.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :nomentidad %><br>
+    <%= f.text_field :nomentidad %>
+  </div>
+  <div class="field">
+    <%= f.label :nomcomercial %><br>
+    <%= f.text_field :nomcomercial %>
+  </div>
+  <div class="field">
+    <%= f.label :nif %><br>
+    <%= f.text_field :nif %>
+  </div>
+  <div class="field">
+    <%= f.label :tipo_id %><br>
+    <%= f.number_field :tipo_id %>
+  </div>
+  <div class="field">
+    <%= f.label :espropia %><br>
+    <%= f.check_box :espropia %>
+  </div>
+  <div class="field">
+    <%= f.label :codentidad %><br>
+    <%= f.text_field :codentidad %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

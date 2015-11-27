@@ -11,9 +11,17 @@
             
     </head>
     <body>
-
+	<div class="container">
+                <div class="row">
+                      <div class="span9"><%= yield %></div>
+                      <div class="span3">
+                         <h2>Sobre Nosotros</h2>
+                         
+                 </div>
+       </div>
+        </div>
    
-            <!-- Main component for a primary marketing message or call to action -->  
+        <!-- Main component for a primary marketing message or call to action -->  
 
         <!--http://stackoverflow.com/questions/10123354/twitter-bootstrap-in-rails-3-2-3
         	https://librosweb.es/libro/introduccion_rails/capitulo_5.html
@@ -24,6 +32,7 @@
         	http://www.opinionatedprogrammer.com/2011/11/twitter-bootstrap-on-rails/
         	http://blog.makeitreal.camp/modales-bootstrap-ruby-on-rails/
         	http://railscasts.com/episodes/196-nested-model-form-part-1?language=es&view=asciicast
+        	http://www.justinball.com/2008/07/03/checkbox-list-in-ruby-on-rails-using-habtm/
         	/-->
         	
 	<!-- gemas utiles: validación de formularios: http://railscasts.com/episodes/263-client-side-validations?language=es&view=asciicast
@@ -39,9 +48,9 @@
     		<b class="caret"></b>
   				</a>
 		<ul class="dropdown-menu">
-  			<% Vendor.all.each do |vendor| %>
-  			<li><%= link_to vendor.name, vendor %></li>
-  			<%end%>
+  			<%# Vendor.all.each do |vendor| %>
+  			<li><%#= link_to vendor.name, vendor %></li>
+  			<%# end%>
 		</ul>
 		-->
 		
