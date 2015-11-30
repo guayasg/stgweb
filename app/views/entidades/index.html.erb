@@ -1,14 +1,16 @@
-<h1>Listing entidades</h1>
 
-<table>
+<h1>Listado de entidades y vinculación entre ellas</h1>
+<div class="table-responsive">
+<table class="table table-hover">
   <thead>
     <tr>
-      <th>Nomentidad</th>
-      <th>Nomcomercial</th>
+      <th>Razón social</th>
+      <th>Nombre Comercial</th>
       <th>Nif</th>
-      <th>Tipo</th>
-      <th>Espropia</th>
-      <th>Codentidad</th>
+      <th>Grupo de venta </th>
+      <th>Direcciones:</th>
+      <th>Vinculado a:</th>
+      <th>Se le vinculan: </th>
       <th></th>
       <th></th>
       <th></th>
@@ -21,17 +23,24 @@
         <td><%= entidad.nomentidad %></td>
         <td><%= entidad.nomcomercial %></td>
         <td><%= entidad.nif %></td>
-        <td><%= entidad.tipo_id %></td>
-        <td><%= entidad.espropia %></td>
-        <td><%= entidad.codentidad %></td>
-        <td><%= link_to 'Show', entidad %></td>
-        <td><%= link_to 'Edit', edit_entidad_path(entidad) %></td>
-        <td><%= link_to 'Destroy', entidad, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= entidad.grupoventa.describe %></td>
+        <td><%= entidad.direcciones.size %></td>
+        <td><%= %></td>
+        <td><%=  %></td>
+        <td><%= %></td>
+        
+        <td><%= link_to 'Mostrar', entidad_path(entidad) %></td>
+        <td><%= link_to 'editar', edit_entidad_path(entidad) %></td>
+        
+        <td>
+        	<!-- <%# button_to 'eliminar', familias_path(familia: familia.id, method: :destroy) ,remote: true, method: :delete, data: { confirm: 'Are you sure?' } %> !-->
+        	<%= button_to "eliminar", entidad, :method => :delete, class: "btn btn-danger",data: { confirm: '¿Borrar esta entidad?' } %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+</div>
+<%= link_to 'Nueva Entidad', new_entidad_path %>
 
-<br>
 
-<%= link_to 'New Entidad', new_entidad_path %>

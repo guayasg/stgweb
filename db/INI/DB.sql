@@ -185,10 +185,14 @@ codgrupo character varying(12) not null,
 describe character varying(100) not null
 );
 
+insert into gruposventas (id,codgrupo,describe) values (0,'GEN','GENÉRICO');
 insert into gruposventas (id,codgrupo,describe) values (1,'HIP','HIPERCOR');
 insert into gruposventas (id,codgrupo,describe) values (2,'ECI','EL CORTE INGLES');
 insert into gruposventas (id,codgrupo,describe) values (3,'MKM','MERKAMUEBLES');
 select setval('gruposventas_id_seq',max(id)) from gruposventas;
+ALTER TABLE gruposventas
+  OWNER TO stg;
+
 
 
 /* ************** Bloque de Gestión de entidades y relaciones entre ellos */
@@ -211,7 +215,8 @@ insert into entidades_links_tipos (id,describehijo,describepadre) values (9,'ES 
 insert into entidades_links_tipos (id,describehijo,describepadre) values (10,'ES REPRESENTANTE/AGENTE CUENTA AJENA (SUBAGENTE) DE','REPRESENTANTES/AGENTES POR CUENTA AJENA (SUBAGENTE)');
 
 select setval('entidades_links_tipos_id_seq',max(id)) from entidades_links_tipos;
-
+ALTER TABLE entidades_links_tipos
+  OWNER TO stg;
 
 create table entidades_tipos(
 id serial primary key,
@@ -238,8 +243,11 @@ insert into entidades_tipos (id,personalidad,forma,iniciales) values (14,'JURIDI
 insert into entidades_tipos (id,personalidad,forma,iniciales) values (15,'JURIDICA','SOCIEDADES MERCANTILES ESPECIALES -> SOCIEDAD DE INVERSION MOBILIARIA','SIM');
 
 select setval('entidades_tipos_id_seq',max(id)) from entidades_tipos;
+ALTER TABLE entidades_tipos
+  OWNER TO stg;
 
-select * from entidades
+
+
 create table entidades(
 id serial primary key,
 nomentidad character varying(200),
@@ -247,16 +255,20 @@ nomcomercial character varying(200),
 nif character(15),
 tipo_id integer references entidades_tipos(id) match full DEFAULT 1,
 espropia bool default false,
-codentidad character(10)
+codentidad character(10),
+grupoventa_id references gruposventas(id) match full default 0
 );
 CREATE unique INDEX idx_entidades_nif ON entidades USING btree (nif);
 CREATE unique INDEX idx_entidades_codentidad ON entidades USING btree (codentidad);
 
-
+																														
 insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (1,'SUAREZ Y MORALES REPRESENTACIONES, S.L','SYM','B35386630',6,true);
 insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (2,'DIMOLAX CANARIAS, S.L','DIMOLAX CANARIAS, S.L','B35386631',6,true);
-
 select setval('entidades_id_seq',max(id)) from entidades;
+ALTER TABLE entidades
+  OWNER TO stg;
+
+
 
 create table entidades_links( --relaciones entre las entidades
 id serial primary key,
@@ -268,8 +280,10 @@ codentidad character(10),
 cuenta_id integer references cuentas(id) match simple default null
 );
 CREATE unique INDEX idx_entidades_entidadlink_id ON entidades_links USING btree (entidadlink_id,entidadlinkpadre_id,entidadtipo_id);
+ALTER TABLE entidades_links
+  OWNER TO stg;
 
-
+/* una entidad apunta aun grupo de venta
 create table  entidades_gruposventas(
 id serial primary key,
 entidad_id integer references entidades(id) match full,
@@ -277,6 +291,9 @@ grupoventa_id references gruposventas(id),
 );
 
 
+ALTER TABLE entidades_gruposventas
+  OWNER TO stg;
+*/
 
 
 /* Fin Bloque de gestión de entidades y relaciones entre ellos */
@@ -434,12 +451,18 @@ gpsx character varying(10),
 gpsy character varying(10),
 nima character varying(30)
 );
+ALTER TABLE direcciones
+  OWNER TO stg;
+
 
 create table direcciones_tipos_links(
 id serial primary key,
 direccion_id integer references direcciones(id) match full,
 direcciones_tipo_id integer references direcciones_tipos(id)
 );
+ALTER TABLE direcciones_tipos_links
+  OWNER TO stg;
+
 
 CREATE INDEX idx_direcciones_idcalle ON direcciones USING btree (calle_id);
 CREATE INDEX idx_direcciones_idinfocomplementaria ON direcciones USING btree (infocomplementaria_id);
