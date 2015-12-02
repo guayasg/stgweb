@@ -1,7 +1,10 @@
-<%= form_for(@entidad) do |f| %>
+
+<%= form_for(@entidad, html: {class: "form-horizontal"}) do |f| %>
   <% if @entidad.errors.any? %>
+
+
     <div id="error_explanation">
-      <h2><%= pluralize(@entidad.errors.count, "error") %> prohibited this entidad from being saved:</h2>
+      <h2><%= pluralize(@entidad.errors.count, "error") %> Esta entidad no puede ser modificada</h2>
 
       <ul>
       <% @entidad.errors.full_messages.each do |msg| %>
@@ -10,32 +13,48 @@
       </ul>
     </div>
   <% end %>
+  
+   <div class="form-group">
+    <%= f.label "Código", class:	"col-sm-1" %>
+    <%= f.text_field :codentidad,  class:	"col-sm-1"%>
+    <%= f.label "Cif/Nif" , class:	"col-sm-1"  %>
+    <%= f.text_field :nif,  class:	"col-sm-1"  %>
+    <%= f.label "¿Empresa del Grupo?",  class:	"col-sm-1"%>
+    <%= f.check_box :espropia, class:	"col-sm-1" %>
+    <%= f.label "Tipo de Entidad",  class:	"col-sm-1" %>
+    <%= f.collection_select( :tipo_id, EntidadTipo.all, :id, :forma, {:selected => @entidad.tipo_id}, {class:	"col-sm-5"}) %>
+  </div>
+  <div class="form-group">
+    <%= f.label "Razón Social" , class:	"col-sm-1"%>
+    <%= f.text_field :nomentidad, class:	"col-sm-11"%>
+  </div>
+  <div class="form-group">
+    <%= f.label "Nombre Comercial" , class:	"col-sm-1" %><br>
+    <%= f.text_field :nomcomercial, :rows => 2, class:	"col-sm-11"%>
+  </div>
+  
 
-  <div class="field">
-    <%= f.label :nomentidad %><br>
-    <%= f.text_field :nomentidad %>
-  </div>
-  <div class="field">
-    <%= f.label :nomcomercial %><br>
-    <%= f.text_field :nomcomercial %>
-  </div>
-  <div class="field">
-    <%= f.label :nif %><br>
-    <%= f.text_field :nif %>
-  </div>
-  <div class="field">
-    <%= f.label :tipo_id %><br>
-    <%= f.number_field :tipo_id %>
-  </div>
-  <div class="field">
-    <%= f.label :espropia %><br>
-    <%= f.check_box :espropia %>
-  </div>
-  <div class="field">
-    <%= f.label :codentidad %><br>
-    <%= f.text_field :codentidad %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
+<!-- Poner en un helper -->
+<div class="tabbable tabs-left">
+<ul class="nav nav-tabs">
+    <li class="<%= 'active' if params[:tab] == 'Direcciones' %>"><a href="#Direcciones" data-toggle="tab">Direcciones</a></li>
+    <li class="<%= 'active' if params[:tab] == 'Subordinados' %>"> <a href="#Subordinados" data-toggle="tab">Subordinados</a></li>
+    <li class="<%= 'active' if params[:tab] == 'Superiores' %>"> <a href="#Superiores" data-toggle="tab">Superiores</a></li>
+</ul>
+
+<div class="tab-content">
+    <div class="<%= if (params[:tab] == 'Direcciones' || !params[:tab])then 'tab-pane fade in active'  else 'tab-pane fade' end%>" id="Direcciones">
+        <%= 'Direcciones' %>
+    </div>
+    <div class="<%= if params[:tab] == 'Subordinados' then 'tab-pane in active'  else 'tab-pane fade' end%>" id="Subordinados">
+        <%= 'Superiores' %>
+    </div>
+    <div class="<%= if params[:tab] == 'Superiores' then 'tab-pane in active'  else 'tab-pane fade' end%>" id="Superiores">
+        <%= 'Superiores' %>
+    </div>
+</div>
+<br>
+<div class="form-group">
+    <%= f.submit "Actualizar Entidad", class: "btn btn-primary btn-lg"%>
   </div>
 <% end %>

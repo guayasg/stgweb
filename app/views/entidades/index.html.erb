@@ -25,8 +25,8 @@
         <td><%= entidad.nif %></td>
         <td><%= entidad.grupoventa.describe %></td>
         <td><%= entidad.direcciones.size %></td>
-        <td><%= %></td>
-        <td><%=  %></td>
+        <td><%= entidad.superiores.size %></td>
+        <td><%= entidad.subordinados.size %></td>
         <td><%= %></td>
         
         <td><%= link_to 'Mostrar', entidad_path(entidad) %></td>

@@ -16,7 +16,7 @@ class EntidadTipo < ActiveRecord::Base
   has_many :entidades 
 end
 
-class Entidadlink < ActiveRecord::Base
+class EntidadLink < ActiveRecord::Base
   self.table_name = "entidades_links"
   belongs_to :padre, class_name: "Entidad", foreign_key: "entidadlikpadre_id"
   belongs_to :hijo, class_name: "Entidad", foreign_key: "entidadlik_id"
