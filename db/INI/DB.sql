@@ -169,6 +169,179 @@ unique(accion_id,perfil_id)
 /* Fin del bloque de gestión de menús permisos y acciones de usuarios */
 
 
+
+
+/* ************** Bloque de direcciones e información Relacionada */
+
+--dirpaises
+
+create table dirpaises(
+id serial primary key,
+describe character varying(150) not null default ''
+);
+
+
+create table dircomunidades(
+id serial primary key,
+pais_id integer not null references dirpaises(id) match full,
+describe character varying(150) not null default ''
+);
+CREATE  INDEX idx_dircomunidades_pais_id ON dircomunidades USING btree (pais_id);
+
+
+
+create table dirprovincias(
+id serial primary key,
+comunidad_id integer default null references dircomunidades(id) match simple,
+pais_id integer not null default 0 references dirpaises(id) match full,
+describe character varying(150) not null default ''
+);
+CREATE  INDEX idx_dirprovincias_pais_id ON dirprovincias USING btree (pais_id);
+CREATE  INDEX idx_dirprovincias_coumunidad_id ON dirprovincias USING btree (comunidad_id);
+
+
+create table dirislas(
+id serial primary key,
+provincia_id integer references dirprovincias(id) match full,
+describe character varying(150) not null default ''
+);
+CREATE  INDEX idx_dirislas_provincia_id ON dirislas USING btree (provincia_id);
+
+
+
+create table dirlocalidades(
+id serial primary key,
+codpostal character varying(10),
+describe character varying(150) not null default ''
+);
+CREATE  INDEX idx_dirlocalidades_codpostal_id ON dirlocalidades USING btree (codpostal);
+
+
+
+create table dirmunicipios(
+id serial primary key,
+provincia_id integer references dirprovincias(id) match full on update cascade on delete cascade,
+isla_id integer references dirislas(id) match simple on update cascade on delete cascade,
+describe character varying(150) not null default ''
+);
+CREATE  INDEX idx_dirmunicipios_provincia_id ON dirmunicipios USING btree (provincia_id);
+CREATE  INDEX idx_dirmunicipios_isla_id ON dirmunicipios USING btree (isla_id);
+
+
+create table dirmunicipioscp(
+id serial primary key,
+municipio_id integer references dirmunicipios(id) match full on update cascade on delete cascade,
+codpostal character varying(10) 
+);
+CREATE  INDEX idx_dirmunicipioscp_municipio_id ON dirmunicipioscp USING btree (municipio_id);
+CREATE  INDEX idx_dirmunicipios_codpostal ON dirmunicipioscp USING btree (codpostal);
+
+
+
+
+create table dircalles(
+id serial primary key,
+codpostal character varying(10), 
+municipio_id integer default null references dirmunicipios(id) match full on update cascade on delete cascade,
+describe character varying(150) not null default ''
+);
+
+CREATE  INDEX idx_dircalles_codpostal ON dirlocalidades USING btree (codpostal);
+CREATE  INDEX idx_dircalles_municipio_id ON dircalles USING btree (municipio_id);
+
+
+
+create table dirinfocomplementarias(
+id serial primary key,
+describe character varying(150) not null default ''
+);
+
+insert into dirinfocomplementarias (id,describe) values (1,'CALLE'); 
+insert into dirinfocomplementarias (id,describe) values (2,'POLIGONO');
+insert into dirinfocomplementarias (id,describe) values (3,'POLIGONO INDUSTRIAL');
+insert into dirinfocomplementarias (id,describe) values (4,'CARRETERA');
+insert into dirinfocomplementarias (id,describe) values (5,'BARRANCO');
+insert into dirinfocomplementarias (id,describe) values (6,'EDIFICIO');
+insert into dirinfocomplementarias (id,describe) values (7,'BARRIO');
+insert into dirinfocomplementarias (id,describe) values (8,'AVENIDA');
+insert into dirinfocomplementarias (id,describe) values (9,'BAJADA');
+insert into dirinfocomplementarias (id,describe) values (10,'ALDEA');
+insert into dirinfocomplementarias (id,describe) values (11,'PARROQUIA');
+insert into dirinfocomplementarias (id,describe) values (12,'PROLONGACION');
+insert into dirinfocomplementarias (id,describe) values (13,'PLAZA');
+insert into dirinfocomplementarias (id,describe) values (14,'GLORIETA');
+insert into dirinfocomplementarias (id,describe) values (15,'ALAMEDA');
+insert into dirinfocomplementarias (id,describe) values (16,'MERCADO');
+insert into dirinfocomplementarias (id,describe) values (17,'CENTRO COMERCIAL');
+insert into dirinfocomplementarias (id,describe) values (18,'RAMBLA');
+insert into dirinfocomplementarias (id,describe) values (19,'PASEO');
+insert into dirinfocomplementarias (id,describe) values (20,'PASAJE');
+select setval('dirinfocomplementarias_id_seq',max(id)) from dirinfocomplementarias;
+
+
+create table direcciones_tipos(
+id serial primary key,
+describe character varying(100),
+esunica boolean default true,
+sede  boolean default false,
+sedenima boolean default false
+);
+
+
+insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (0,'SEDE FISCAL',true,false,false);
+insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (1,'SEDE ENVÍO FACTURAS',false,false,false);
+insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (2,'SEDE ENVÍO MERCANCÍA',false,true,false);
+insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (3,'SEDE TIENDA',false,true,false);
+insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (4,'SEDE NIMA',false,true,true);
+insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (5,'SEDE OFICINA',false,true,true);
+insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (6,'SEDE ALMACEN',false,true,true);
+
+
+select setval('direcciones_tipos_id_seq',max(id)) from direcciones_tipos;
+
+
+create table direcciones(
+id serial primary key,
+nomsede character varying (50) default '', --indicará un texto para describir la dirección, como puede ser "sucursal del sur", "dirección de envío"...o lo que se quiera
+entidad_id integer references entidades(id) match full,
+calle_id integer references dircalles(id) match full,
+infocomplementaria_id integer references dirinfocomplementarias(id)  match full default 1,
+infocomplementaria character varying(50) default '',
+numgobierno integer,
+portal character varying(10),
+piso integer,
+escalera character varying(10),
+letra character varying(10),
+telf1 character varying(30),
+telf2 character varying(30),
+web character varying(60),
+email character varying(60),
+gpsx character varying(10),
+gpsy character varying(10),
+nima character varying(30)
+);
+ALTER TABLE direcciones
+  OWNER TO stg;
+
+
+create table direcciones_tipos_links(
+id serial primary key,
+direccion_id integer references direcciones(id) match full,
+direcciones_tipo_id integer references direcciones_tipos(id)
+);
+ALTER TABLE direcciones_tipos_links
+  OWNER TO stg;
+
+
+CREATE INDEX idx_direcciones_idcalle ON direcciones USING btree (calle_id);
+CREATE INDEX idx_direcciones_idinfocomplementaria ON direcciones USING btree (infocomplementaria_id);
+CREATE INDEX idx_direcciones_nima ON direcciones USING btree (nima);
+CREATE INDEX idx_direcciones_nomsede ON direcciones USING btree (nomsede);
+
+-- Fin de bloque direcciones
+
+
+
 /* *************** Bloque de información contable */
 
 create table cuentas(
@@ -185,10 +358,14 @@ codgrupo character varying(12) not null,
 describe character varying(100) not null
 );
 
+insert into gruposventas (id,codgrupo,describe) values (0,'GEN','GENÉRICO');
 insert into gruposventas (id,codgrupo,describe) values (1,'HIP','HIPERCOR');
 insert into gruposventas (id,codgrupo,describe) values (2,'ECI','EL CORTE INGLES');
 insert into gruposventas (id,codgrupo,describe) values (3,'MKM','MERKAMUEBLES');
 select setval('gruposventas_id_seq',max(id)) from gruposventas;
+ALTER TABLE gruposventas
+  OWNER TO stg;
+
 
 
 /* ************** Bloque de Gestión de entidades y relaciones entre ellos */
@@ -211,7 +388,8 @@ insert into entidades_links_tipos (id,describehijo,describepadre) values (9,'ES 
 insert into entidades_links_tipos (id,describehijo,describepadre) values (10,'ES REPRESENTANTE/AGENTE CUENTA AJENA (SUBAGENTE) DE','REPRESENTANTES/AGENTES POR CUENTA AJENA (SUBAGENTE)');
 
 select setval('entidades_links_tipos_id_seq',max(id)) from entidades_links_tipos;
-
+ALTER TABLE entidades_links_tipos
+  OWNER TO stg;
 
 create table entidades_tipos(
 id serial primary key,
@@ -238,6 +416,9 @@ insert into entidades_tipos (id,personalidad,forma,iniciales) values (14,'JURIDI
 insert into entidades_tipos (id,personalidad,forma,iniciales) values (15,'JURIDICA','SOCIEDADES MERCANTILES ESPECIALES -> SOCIEDAD DE INVERSION MOBILIARIA','SIM');
 
 select setval('entidades_tipos_id_seq',max(id)) from entidades_tipos;
+ALTER TABLE entidades_tipos
+  OWNER TO stg;
+
 
 
 create table entidades(
@@ -247,14 +428,20 @@ nomcomercial character varying(200),
 nif character(15),
 tipo_id integer references entidades_tipos(id) match full DEFAULT 1,
 espropia bool default false,
-codentidad character(10)
+codentidad character(10),
+grupoventa_id integer references gruposventas(id) match full default 0
 );
 CREATE unique INDEX idx_entidades_nif ON entidades USING btree (nif);
+CREATE unique INDEX idx_entidades_codentidad ON entidades USING btree (codentidad);
 
+																														
 insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (1,'SUAREZ Y MORALES REPRESENTACIONES, S.L','SYM','B35386630',6,true);
 insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (2,'DIMOLAX CANARIAS, S.L','DIMOLAX CANARIAS, S.L','B35386631',6,true);
-
 select setval('entidades_id_seq',max(id)) from entidades;
+ALTER TABLE entidades
+  OWNER TO stg;
+
+
 
 create table entidades_links( --relaciones entre las entidades
 id serial primary key,
@@ -265,193 +452,25 @@ codentidad character(10),
 cuenta_id integer references cuentas(id) match simple default null,
 direccion_id integer references direcciones(id) match simple default null
 );
+CREATE unique INDEX idx_entidades_entidadlink_id ON entidades_links USING btree (entidadlink_id,entidadlinkpadre_id);
+ALTER TABLE entidades_links
+  OWNER TO stg;
 
-
-
+/* una entidad apunta aun grupo de venta
 create table  entidades_gruposventas(
 id serial primary key,
 entidad_id integer references entidades(id) match full,
 grupoventa_id references gruposventas(id),
 );
-
-
+ALTER TABLE entidades_gruposventas
+  OWNER TO stg;
+*/
 
 
 /* Fin Bloque de gestión de entidades y relaciones entre ellos */
 
 
 
-
-
-/* ************** Bloque de direcciones e información Relacionada */
-
---dirpaises
-
-create table dirpaises(
-id serial primary key,
-describe character varying(150) not null default '',
-);
-
-
-create table dircomunidades(
-id serial primary key,
-pais_id integer not null references dirpaises(id) match full,
-describe character varying(150) not null default '',
-);
-CREATE  INDEX idx_dircomunidades_pais_id ON dircomunidades USING btree (pais_id);
-
-
-
-create table dirprovincias(
-id serial primary key,
-comunidad_id integer default null references dircomunidades(id) match simple,
-pais_id integer not null default 0 references dirpaises(id) match full,
-describe character varying(150) not null default '',
-);
-CREATE  INDEX idx_dirprovincias_pais_id ON dirpaises USING btree (pais_is);
-CREATE  INDEX idx_dirprovincias_coumunidad_id ON dircomunidades USING btree (comunidad_id);
-
-
-create table dirislas(
-id serial primary key,
-provincia_id integer references dirprovincias(id) match full,
-describe character varying(150) not null default '';
-);
-CREATE  INDEX idx_dirislas_provincia_id ON dirpaises USING btree (provincia_id);
-
-
-create table dircodpostales(
-id serial primary key,
-provincia_id integer references dirprovincias(id) match full,
-describe character varying(150) not null default '',
-);
-CREATE  INDEX idx_dircodpostales_isla_id ON dircodpostales USING btree (isla_id);
-CREATE  INDEX idx_dircodpostales_provincia_id ON dircodpostales USING btree (comunidad_id);
-
-
-
-create table dirlocalidades(
-id serial primary key,
-codpostal_id integer references dircodpostales(id) match full,
-describe character varying(150) not null default '',
-);
-CREATE  INDEX idx_dirlocalidades_codpostal_id ON dirlocalidades USING btree (codpostal_id);
-
-
-
-create table dirmunicipios(
-id serial primary key,
-provincia_id integer references dirprovincias(id) match full on update cascade on delete cascade,
-isla_id integer references dirislas(id) match simple on update cascade on delete cascade,
-describe character varying(150) not null default '',
-);
-CREATE  INDEX idx_dirmunicipios_provincia_id ON dirmunicipios USING btree (provincia_id);
-CREATE  INDEX idx_dirmunicipios_isla_id ON dirmunicipios USING btree (isla_id);
-
-
-create table dirmunicipios(
-id serial primary key,
-municipio_id integer references dirmunicipios(id) match full on update cascade on delete cascade,
-codpostal_id integer references dircodpostales(id) math full on update cascade on delete cascade
-);
-CREATE  INDEX idx_dirmunicipioscp_municipio_id ON dirmunicipioscp USING btree (municipio_id);
-CREATE  INDEX idx_dirmunicipios_codpostal_id ON dirmunicipioscp USING btree (codpostal_id);
-
-
-
-
-create table dircalles(
-id serial primary key,
-codpostal_id integer references dircodpostales(id) match full,
-municipio_id integer default null references dirmunicipios(id) match full on update cascade on delete cascade,
-describe character varying(150) not null default ''
-);
-
-CREATE  INDEX idx_dircalles_codpostal_id ON dirlocalidades USING btree (codpostal_id);
-CREATE  INDEX idx_dircalles_municipio_id ON dircalles USING btree (municipio_id);
-
-
-
-create table dirinfocomplementarias(
-id serial primary key,
-describe character varying(150) not null default '',
-);
-
-insert into dirinfocomplementarias (id,describe) values (1,'CALLE'); 
-insert into dirinfocomplementarias (id,describe) values (2,'POLIGONO');
-insert into dirinfocomplementarias (id,describe) values (3,'POLIGONO INDUSTRIAL');
-insert into dirinfocomplementarias (id,describe) values (4,'CARRETERA');
-insert into dirinfocomplementarias (id,describe) values (5,'BARRANCO');
-insert into dirinfocomplementarias (id,describe) values (6,'EDIFICIO');
-insert into dirinfocomplementarias (id,describe) values (7,'BARRIO');
-insert into dirinfocomplementarias (id,describe) values (8,'AVENIDA');
-insert into dirinfocomplementarias (id,describe) values (8,'BAJADA');
-insert into dirinfocomplementarias (id,describe) values (9,'ALDEA');
-insert into dirinfocomplementarias (id,describe) values (10,'PARROQUIA');
-insert into dirinfocomplementarias (id,describe) values (11,'PROLONGACION');
-insert into dirinfocomplementarias (id,describe) values (12,'PLAZA');
-insert into dirinfocomplementarias (id,describe) values (13,'GLORIETA');
-insert into dirinfocomplementarias (id,describe) values (14,'ALAMEDA');
-insert into dirinfocomplementarias (id,describe) values (15,'MERCADO');
-insert into dirinfocomplementarias (id,describe) values (16,'CENTRO COMERCIAL');
-insert into dirinfocomplementarias (id,describe) values (17,'RAMBLA');
-insert into dirinfocomplementarias (id,describe) values (18,'PASEO');
-insert into dirinfocomplementarias (id,describe) values (19,'PASAJE');
-select setval('dirinfocomplementarias_id_seq',max(id)) from dirinfocomplementarias;
-
-
-create table direcciones_tipos(
-id serial primary key,
-describe character varying(100),
-esunica boolean default true,
-sede  boolean default false,
-sedenima boolean default false
-);
-
-insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (0,'SEDE FISCAL',true,false);
-insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (1,'SEDE FACTURACION',false,false);
-insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (2,'SEDE ENVÍO',false,false);
-insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (3,'SEDE TIENDA',false,false);
-insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (4,'SEDE NIMA',false,true);
-insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (5,'SEDE OFICINA',false,true);
-
-select setval('direcciones_tipos_id_seq',max(id)) from direcciones_tipos;
-
-
-create table direcciones(
-id serial primary key,
-nomsede character varying (100) default '', --indicará un texto para describir la dirección, como puede ser "sucursal del sur", "dirección de envío"...o lo que se quiera
-entidad_id integer references entidades(id) match full,
-calle_id integer references dircalles(id) match full,
-infocomplementaria_id integer references dirinfocomplementarias(id) match match full default 1,
-infocomplementaria character varying(50) default '',
-numgobierno integer,
-portal character varying(10),
-piso integer,
-escalera character varying(10),
-letra character varying(10),
-telf1 character varying(30),
-telf2 character varying(30),
-web character varying(60),
-email character varying(60),
-gpsx character varying(10),
-gpsy character varying(10),
-nima character varying(30),
-);
-
-
-create table direcciones_tipos_links(
-id serial primary key,
-direccion_id integer references direcciones(id) match full,
-direcciones_tipo_id integer references direcciones_tipos(id),
-);
-
-CREATE INDEX idx_direcciones_idcalle ON direcciones USING btree (calle_id);
-CREATE INDEX idx_direcciones_idinfocomplementaria ON direcciones USING btree (infocomplementaria_id);
-CREATE INDEX idx_direcciones_nima ON direcciones USING btree (nima);
-CREATE INDEX idx_direcciones_nomsede ON direcciones USING btree (nomsede);
-
--- Fin de bloque direcciones
 
 
 -- ************** Boque de unidades de medida
@@ -1241,7 +1260,6 @@ begin
    return p_totcodarticulo||'|'||p_totnombre;
 end;
 $$;
-
 --Esta función se puede repalntear usando consultas recursivas
 CREATE FUNCTION articulos_descendencia(int) RETURNS text
     LANGUAGE plpgsql
@@ -1273,7 +1291,6 @@ end;
 $$;
 --articulos_descendencia(in idfamilia,out idarticulo, out codarticulo, out nombre) -- devuelve un conjunto de registros de artículos
 --articulos_busqueda(texto,out idarticulo) --devuelve un conjunto de registros
-
 /*
 DROP TABLE IF EXISTS direccionestipos; --tipos de direcciones (de facturación (fiscal), de entrega (de envío), dirección de sucursal
 create table direccionestipos(
@@ -1649,8 +1666,6 @@ check (
 
 
 /* ---------- Fin del módulo de gestión de cartera
-
-
 --doumentosfiscales (id,iddocumento,idimpuesto,idirpf,base (incluye los descuentos de cabecera),cuotaimpuesto,cuotairpf,totimpuesto,totirpf (estos 2 últimos campos inicializados a 0 que contienen el total por base imponible del documento en cuestión)
 DROP TABLE IF EXISTS DOCUMENTOSFISCALES;
 create table documentosfiscales(
@@ -1662,7 +1677,6 @@ cuota (15,2),
 CONSTRAINT documentosfiscales_iddocumento_fkey FOREIGN KEY (iddocumento) REFERENCES documentos(id) MATCH FULL on delete cascade ON UPDATE CASCADE,
 CONSTRAINT documentosfiscales_idimpuesto_fkey FOREIGN KEY (idimpuesto) REFERENCES impuestos(id) MATCH FULL ON UPDATE CASCADE
 );
-
 CREATE INDEX idx_documentosfiscales_impuesto_id ON documentosfiscales USING btree (impuesto_id);
 CREATE INDEX unique idx_documentosfiscales_documento_id_impuesto_id ON documentosfiscales USING btree (documento_id,impuesto_id);
 -- documentosfiscales__calcular(iddocumento) as text
@@ -1671,7 +1685,6 @@ CREATE INDEX unique idx_documentosfiscales_documento_id_impuesto_id ON documento
 --2) se modifica el dtopp,  el dtofijo, o el idirpf de un documento. Si se modifica el dtopp=> es un porcentaje que hay que aplicar a cada una de los totlinea del documento para calcular la base de las mismas. Si se modifica
 --   el dtofijo, hay que irlo restando de los totlinea de cada base imponible para obtener al final el conjunto de bases a aplicar. Si se modifica el irpf se procede como si se cambiase cualquier impuesto de línea.
 --3) El idirpf, tener en cuenta que está en la cabecera.
-
 --Otra función que calcule el total de factura Documentos_totales(idtipo) as text
 --si idtipo=0 --> devolverá todos los totales que se describen separados por el caracter |
 --si idtipo=1 --> total de factura
@@ -1679,9 +1692,6 @@ CREATE INDEX unique idx_documentosfiscales_documento_id_impuesto_id ON documento
 --si idtipo=3 --> total de irpf
 --si idtipo=4 --> total de base de la factura
 --si idtipo=5 --> total de base irpf
-
-
-
 CREATE FUNCTION Documentosfiscales_settotales(integer) RETURNS text
     LANGUAGE plpgsql
     AS $$
@@ -1728,7 +1738,6 @@ begin
   return 'OK';
 end;
 $$;
-
 CREATE FUNCTION Documentosfiscales_gettotales(integer,integer) RETURNS text
     LANGUAGE plpgsql
     AS $$
@@ -1738,7 +1747,6 @@ CREATE FUNCTION Documentosfiscales_gettotales(integer,integer) RETURNS text
 --si idtipo=3 --> total de irpf
 --si idtipo=4 --> total de base de la factura
 --si idtipo=5 --> total de base irpf
-
 declare
 p_iddocumento alias for $1;
 p_idtipo alias for $2;
@@ -1747,7 +1755,6 @@ p_totimpuestos numeric(15,2);
 p_totirpf numeric(15,2);
 p_totbase numeric(15,2);
 p_totbaseirpf numeric(15,2);
-
 begin
   case when p_idtipo=1 then ----> total de factura
   				select COALESCE(sum(case when impuestos.tipo<>'IRPF' then base + cuota else base - cuota end),0) into p_totdocumento
@@ -1790,13 +1797,8 @@ begin
  					where documento_id=p_iddocumento ;
  					return p_totodocumento::text||'|'||p_totimpuestos::text||'|'||p_totirpf::text||'|'||p_totbase::text||'|'||p_totbaseirpf::text;
 	end;
-
 end;
 $$;
-
-
-
-
 /* Para la búsqueda de 
 select dpadre.id, articulos.id,  sum(lpadre.cantidad - coalesce(lineas.cantidad,0)) as pendiente,
 from documentos dpadre inner join lineas lpadre on documentos.id=lineas.iddocumento inner join articulos on lpadre.idarticulo=articulos.id
