@@ -260,10 +260,10 @@ create table entidades_links( --relaciones entre las entidades
 id serial primary key,
 entidadlink_id integer references entidades(id) match full,
 entidadlinkpadre_id integer references entidades(id) match full,
-entidadtipo_id integer references entidadades_tipos(id) match full,
 -- Campos adicionales que necesitan ponerse 
 codentidad character(10),
-cuenta_id integer references cuentas(id) match simple default null
+cuenta_id integer references cuentas(id) match simple default null,
+direccion_id integer references direcciones(id) match simple default null
 );
 
 
