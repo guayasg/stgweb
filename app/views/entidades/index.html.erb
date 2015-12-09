@@ -1,0 +1,47 @@
+
+<h1>Listado de entidades y vinculación entre ellas</h1>
+<div class="table-responsive ">
+<table class="table table-hover table ">
+  <thead>
+    <tr>
+      <th>Razón social</th>
+      <th>Nombre Comercial</th>
+      <th>Nif</th>
+      <th>Grupo de venta </th>
+      <th>Direcciones:</th>
+      <th>Vinculado a:</th>
+      <th>Se le vinculan: </th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @entidades.each do |entidad| %>
+      <tr>
+        <td><%= entidad.nomentidad %></td>
+        <td><%= entidad.nomcomercial %></td>
+        <td><%= entidad.nif %></td>
+        <td><%= entidad.grupoventa.describe %></td>
+        <td><%= entidad.direcciones.size %></td>
+        <td><%= entidad.superiores.size %></td>
+        <td><%= entidad.subordinados.size %></td>
+        <td><%= %></td>
+        
+        <td<%= link_to 'Mostrar', entidad_path(entidad) %></td>
+        <td><%= link_to 'editar', edit_entidad_path(entidad) %></td>
+        
+        <td>
+        	<!-- <%# button_to 'eliminar', familias_path(familia: familia.id, method: :destroy) ,remote: true, method: :delete, data: { confirm: 'Are you sure?' } %> !-->
+        	<%= link_to "eliminar", entidad, :method => :delete, class: "btn btn-danger",data: { confirm: '¿Borrar esta entidad?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+<%= link_to 'Nueva Entidad', new_entidad_path %>
+
+
+

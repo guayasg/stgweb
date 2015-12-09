@@ -11,8 +11,37 @@
             
     </head>
     <body>
+	<div class="container">
+                <div class="row">
+                      <div class="span9"><%= yield %></div>
+                      <div class="span3">
+                         <h2>Sobre Nosotros</h2>
+                         
+                 </div>
+       </div>
+        </div>
    
-<<<<<<< HEAD
+        <!-- Main component for a primary marketing message or call to action -->  
+
+        <!--http://stackoverflow.com/questions/10123354/twitter-bootstrap-in-rails-3-2-3
+        	https://librosweb.es/libro/introduccion_rails/capitulo_5.html
+        	http://pullmonkey.com/2008/3/30/dynamic-select-boxes-ruby-on-rails
+        	http://railscasts.com/episodes/205-unobtrusive-javascript?language=es&view=asciicast
+        	http://docs.bootcss.com/bootstrap-1.4.0/docs/javascript.html
+        	http://www.gotealeaf.com/blog/integrating-rails-and-bootstrap-part-3
+        	http://www.opinionatedprogrammer.com/2011/11/twitter-bootstrap-on-rails/
+        	http://blog.makeitreal.camp/modales-bootstrap-ruby-on-rails/
+        	http://railscasts.com/episodes/196-nested-model-form-part-1?language=es&view=asciicast
+        	http://www.justinball.com/2008/07/03/checkbox-list-in-ruby-on-rails-using-habtm/
+        	buscador  ===> https://rescuetrue.wordpress.com/2010/05/06/buscador-restful-en-rails/
+        	ajasx: https://richonrails.com/articles/basic-ajax-in-ruby-on-rails
+        	/-->
+        	
+	<!-- gemas utiles: validación de formularios: http://railscasts.com/episodes/263-client-side-validations?language=es&view=asciicast
+				simple_form: https://www.omniref.com/ruby/gems/simple_form/1.4.0 , http://www.rubydoc.info/github/plataformatec/simple_form/master/frames
+				-->
+    </body>
+</html>
    <!--
    <ul class="nav nav-pills">
   	<li class="dropdown">
@@ -21,9 +50,9 @@
     		<b class="caret"></b>
   				</a>
 		<ul class="dropdown-menu">
-  			<% Vendor.all.each do |vendor| %>
-  			<li><%= link_to vendor.name, vendor %></li>
-  			<%end%>
+  			<%# Vendor.all.each do |vendor| %>
+  			<li><%#= link_to vendor.name, vendor %></li>
+  			<%# end%>
 		</ul>
 		-->
 		
@@ -115,48 +144,6 @@
 
 
 
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-      ...
-      <li class="dropdown-submenu">
-        <a tabindex="-1" href="#">More options</a>
-        <ul class="dropdown-menu">
-          ...
-        </ul>
-      </li>
-    </usl>
-
     -->	
-    	
-        <div class="container">
-                <div class="row">
-                      <div class="span9"><%= yield %></div>
-                      <div class="span3">
-                         <h2>Sobre Nosotros</h2>
-                         
-                 </div>
-       </div>
-        </div>
-
-      <!-- Main component for a primary marketing message or call to action -->  
-
-        <!--http://stackoverflow.com/questions/10123354/twitter-bootstrap-in-rails-3-2-3
-        	https://librosweb.es/libro/introduccion_rails/capitulo_5.html
-        	http://pullmonkey.com/2008/3/30/dynamic-select-boxes-ruby-on-rails
-        	http://railscasts.com/episodes/205-unobtrusive-javascript?language=es&view=asciicast
-        	http://docs.bootcss.com/bootstrap-1.4.0/docs/javascript.html
-        	http://www.gotealeaf.com/blog/integrating-rails-and-bootstrap-part-3
-        	http://www.opinionatedprogrammer.com/2011/11/twitter-bootstrap-on-rails/
-        	http://blog.makeitreal.camp/modales-bootstrap-ruby-on-rails/
-        	http://railscasts.com/episodes/196-nested-model-form-part-1?language=es&view=asciicast
-        	ajasx: https://richonrails.com/articles/basic-ajax-in-ruby-on-rails
-        	/-->
-        	
-        	
-	<!-- gemas utiles: validación de formularios: http://railscasts.com/episodes/263-client-side-validations?language=es&view=asciicast
-				simple_form: https://www.omniref.com/ruby/gems/simple_form/1.4.0 , http://www.rubydoc.info/github/plataformatec/simple_form/master/frames
-				-->
-        	
-    </body>
-</html>
 
 

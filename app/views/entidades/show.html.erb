@@ -1,0 +1,38 @@
+<p id="notice"><%= notice %></p>
+
+
+
+
+
+<p>
+  <strong>Nomentidad:</strong>
+  <%= @entidad.nomentidad %>
+</p>
+
+<p>
+  <strong>Nomcomercial:</strong>
+  <%= @entidad.nomcomercial %>
+</p>
+
+<p>
+  <strong>Nif:</strong>
+  <%= @entidad.nif %>
+</p>
+
+<p>
+  <strong>Tipo:</strong>
+  <%= @entidad.tipo_id %>
+</p>
+
+<p>
+  <strong>Espropia:</strong>
+  <%= @entidad.espropia %>
+</p>
+
+<p>
+  <strong>Codentidad:</strong>
+  <%= @entidad.codentidad %>
+</p>
+
+<%= link_to 'Edit', edit_entidad_path(@entidad) %> |
+<%= link_to 'Back', entidades_path %>

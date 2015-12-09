@@ -170,6 +170,35 @@ unique(accion_id,perfil_id)
 
 
 
+/* *************** Bloque de información contable */
+
+create table cuentas(
+id serial primary key,
+codcuenta character varying(12) not null,
+describe character varying(100) not null
+);
+
+/* ************ Bloque de grupo de ventas  */
+
+create table  gruposventas(
+id serial primary key,
+codgrupo character varying(12) not null,
+describe character varying(100) not null
+);
+
+insert into gruposventas (id,codgrupo,describe) values (0,'GEN','GENÉRICO');
+insert into gruposventas (id,codgrupo,describe) values (1,'HIP','HIPERCOR');
+insert into gruposventas (id,codgrupo,describe) values (2,'ECI','EL CORTE INGLES');
+insert into gruposventas (id,codgrupo,describe) values (3,'MKM','MERKAMUEBLES');
+select setval('gruposventas_id_seq',max(id)) from gruposventas;
+ALTER TABLE gruposventas
+  OWNER TO stg;
+
+
+
+
+
+
 
 /* ************** Bloque de direcciones e información Relacionada */
 
@@ -339,6 +368,113 @@ CREATE INDEX idx_direcciones_nima ON direcciones USING btree (nima);
 CREATE INDEX idx_direcciones_nomsede ON direcciones USING btree (nomsede);
 
 -- Fin de bloque direcciones
+
+
+
+
+/* ************** Bloque de Gestión de entidades y relaciones entre ellos */
+
+
+create table entidades_links_tipos(
+id serial primary key,
+describehijo character varying(100),
+describepadre character varying(100)
+);
+insert into entidades_links_tipos (id,describehijo,describepadre) values (1,'ES EMPLEADO DE','EMPLEADOS');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (2,'ES CLIENTE AL MAYOR (VENDEDOR) DE','CLIENTES AL MAYOR (VENDEDORES)');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (3,'ES CLIENTE AL MAYOR (CONSUMIDOR FINAL) DE','CLIENTES AL MAYOR (CONSUMIDORES FINALES)');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (4,'ES CLIENTE AL MENOR DE','CLIENTES AL MENOR');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (5,'ES REPRESENTANTE DE','REPRESENTANTES');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (6,'ES ACREEDOR DE','ACREEDORES');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (7,'ES COMERCIAL DE','COMERCIALES');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (8,'ES COMERCIAL DE','COMERCIALES');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (9,'ES REPRESENTANTE/AGENTE CUENTA PROPIA DE','REPRESENTANTES/AGENTES POR CUENTA PROPIA');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (10,'ES REPRESENTANTE/AGENTE CUENTA AJENA (SUBAGENTE) DE','REPRESENTANTES/AGENTES POR CUENTA AJENA (SUBAGENTE)');
+
+select setval('entidades_links_tipos_id_seq',max(id)) from entidades_links_tipos;
+ALTER TABLE entidades_links_tipos
+  OWNER TO stg;
+
+create table entidades_tipos(
+id serial primary key,
+Personalidad character(20) CHECK (personalidad = ANY (ARRAY['FISICA'::character(15), 'JURIDICA'::character(15)])),
+forma character varying(250),
+iniciales character(10),
+unique(iniciales)
+);
+
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (1,'FISICA','PERSONA FISICA','PF');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (2,'FISICA','EMPRESARIO INDIVIDUAL','EI');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (3,'FISICA','COMUNIDAD DE BIENES','CB');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (4,'FISICA','SOCIEDAD CIVIL','SCI');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (5,'JURIDICA','SOCIEDADES MERCANTILES -> SOCIEDAD COLECTIVA','SCO');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (6,'JURIDICA','SOCIEDADES MERCANTILES -> SOCIEDAD RESPONSABILIDAD LIMITADA','SL');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (7,'JURIDICA','SOCIEDADES MERCANTILES -> SOCIEDAD LIITADA NUEVA EMPRESA','SLNE');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (8,'JURIDICA','SOCIEDADES MERCANTILES -> SOCIEDAD ANONIMA','SA');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (9,'JURIDICA','SOCIEDADES MERCANTILES -> SOCIEDAD COMANDITARIA POR ACCIONES','SCA');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (10,'JURIDICA','SOCIEDADES MERCANTILES -> SOCIEDAD COMANDITARIA SIMPLE','SCS');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (11,'JURIDICA','SOCIEDADES MERCANTILES ESPECIALES -> SOCIEDAD LABORAL 1','SAL');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (12,'JURIDICA','SOCIEDADES MERCANTILES ESPECIALES -> SOCIEDAD LABORAL 2','SLL');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (13,'JURIDICA','SOCIEDADES MERCANTILES ESPECIALES -> SOCIEDAD COOPERATIVA','COOP');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (14,'JURIDICA','SOCIEDADES MERCANTILES ESPECIALES -> AGRUPACION DE INTERES ECONOMICO','AIE');
+insert into entidades_tipos (id,personalidad,forma,iniciales) values (15,'JURIDICA','SOCIEDADES MERCANTILES ESPECIALES -> SOCIEDAD DE INVERSION MOBILIARIA','SIM');
+
+select setval('entidades_tipos_id_seq',max(id)) from entidades_tipos;
+ALTER TABLE entidades_tipos
+  OWNER TO stg;
+
+
+
+create table entidades(
+id serial primary key,
+nomentidad character varying(200),
+nomcomercial character varying(200),
+nif character(15),
+tipo_id integer references entidades_tipos(id) match full DEFAULT 1,
+espropia bool default false,
+codentidad character(10),
+grupoventa_id references gruposventas(id) match full default 0
+);
+CREATE unique INDEX idx_entidades_nif ON entidades USING btree (nif);
+CREATE unique INDEX idx_entidades_codentidad ON entidades USING btree (codentidad);
+
+																														
+insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (1,'SUAREZ Y MORALES REPRESENTACIONES, S.L','SYM','B35386630',6,true);
+insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (2,'DIMOLAX CANARIAS, S.L','DIMOLAX CANARIAS, S.L','B35386631',6,true);
+select setval('entidades_id_seq',max(id)) from entidades;
+ALTER TABLE entidades
+  OWNER TO stg;
+
+
+
+create table entidades_links( --relaciones entre las entidades
+id serial primary key,
+entidadlink_id integer references entidades(id) match full,
+entidadlinkpadre_id integer references entidades(id) match full,
+-- Campos adicionales que necesitan ponerse 
+codentidad character(10),
+cuenta_id integer references cuentas(id) match simple default null
+);
+CREATE unique INDEX idx_entidades_entidadlink_id ON entidades_links USING btree (entidadlink_id,entidadlinkpadre_id);
+ALTER TABLE entidades_links
+  OWNER TO stg;
+
+/* una entidad apunta aun grupo de venta
+create table  entidades_gruposventas(
+id serial primary key,
+entidad_id integer references entidades(id) match full,
+grupoventa_id references gruposventas(id),
+);
+
+
+ALTER TABLE entidades_gruposventas
+  OWNER TO stg;
+*/
+
+
+/* Fin Bloque de gestión de entidades y relaciones entre ellos */
+
+
 
 
 

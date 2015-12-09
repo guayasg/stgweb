@@ -2,6 +2,8 @@ Stgweb::Application.routes.draw do
   
 
   
+  resources :entidades
+
   resources :familias do
 
     post 'componer_articulo', on: :collection

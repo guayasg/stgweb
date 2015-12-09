@@ -1,0 +1,18 @@
+<div class="tabbable tabs-left">
+	<ul class="nav nav-tabs">
+    	<li class="<%= 'active' if params[:tab] == 'Direcciones' %>"><a href="#Direcciones" data-toggle="tab">Direcciones</a></li>
+    	<li class="<%= 'active' if params[:tab] == 'Subordinados' %>"> <a href="#Subordinados" data-toggle="tab">Subordinados</a></li>
+    	<li class="<%= 'active' if params[:tab] == 'Superiores' %>"> <a href="#Superiores" data-toggle="tab">Superiores</a></li>
+	</ul>
+	</div>
+	<div class="tab-content">
+    	<div class="<%= if (params[:tab] == 'Direcciones' || !params[:tab])then 'tab-pane fade in active'  else 'tab-pane fade' end%>" id="Direcciones">
+        	<%= 'Direcciones' %>
+    	</div>
+    	<div class="<%= if params[:tab] == 'Subordinados' then 'tab-pane in active'  else 'tab-pane fade' end%>" id="Subordinados">
+        	<%= 'subordinados' %>
+    	</div>
+    	<div class="<%= if params[:tab] == 'Superiores' then 'tab-pane in active'  else 'tab-pane fade' end%>" id="Superiores">
+        	<%= 'Superiores' %>
+    	</div>
+	</div>
