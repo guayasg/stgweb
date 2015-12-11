@@ -7,12 +7,14 @@
 	</div>
 	<div class="tab-content">
     	<div class="<%= if (params[:tab] == 'Direcciones' || !params[:tab])then 'tab-pane fade in active'  else 'tab-pane fade' end%>" id="Direcciones">
-        	<%= 'Direcciones' %>
+        	<%= render 'direcciones', object: entidad, as: "entidad"%>
     	</div>
     	<div class="<%= if params[:tab] == 'Subordinados' then 'tab-pane in active'  else 'tab-pane fade' end%>" id="Subordinados">
-        	<%= 'subordinados' %>
+    		
+        	<%= render partial: 'subordinados', object: entidad,  as: "entidad" %>
     	</div>
     	<div class="<%= if params[:tab] == 'Superiores' then 'tab-pane in active'  else 'tab-pane fade' end%>" id="Superiores">
-        	<%= 'Superiores' %>
+        	<%= render 'superiores', object: entidad, as: "entidad" %>
     	</div>
 	</div>
+	

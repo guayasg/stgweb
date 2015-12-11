@@ -34,8 +34,9 @@
   </div>
   
   <% if !@entidad.id.nil? %>
+    
 <!-- Poner en un helper -->
-	<%= render 'tab' %>
+	<%= render partial: 'tab', object: f, as: "entidad" %>
  <% end %>
 
 

@@ -1,0 +1,30 @@
+<div class="table-responsive">
+		<table class="table table-hover">
+  		<thead>
+	    	<tr>
+		  	<th>Tipo</th>
+		  	<th>Cod Subordinado</th>
+		  	<th>Razón social</th>
+		  	<th>Nombre Comercial</th>
+      	  	<th>nif</th>
+      		<th></th>
+      		<th></th>
+      		<th><%=  %></th>	
+    		</tr>
+  		</thead>
+
+		<tbody>
+			<%= entidad.object.subordinados.first.entidadlink_id if !entidad.object.subordinados.first.nil? %>
+			
+			<% @entidad.subordinados.each do |e| %>
+				<%= entidad.fields_for e do |subor| %>
+					<tr>	
+						<td> <%= subor.text_field :codentidad ,  class: "col-sm-3"%> </td>
+	   			
+	        		</tr>
+	        	<% end %>
+			<% end %>
+	        <%= entidad.hidden_field :id %>
+	     </tbody>
+	   </table>
+</div>

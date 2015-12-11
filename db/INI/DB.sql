@@ -387,13 +387,28 @@ insert into entidades_links_tipos (id,describehijo,describepadre) values (4,'ES 
 insert into entidades_links_tipos (id,describehijo,describepadre) values (5,'ES REPRESENTANTE DE','REPRESENTANTES');
 insert into entidades_links_tipos (id,describehijo,describepadre) values (6,'ES ACREEDOR DE','ACREEDORES');
 insert into entidades_links_tipos (id,describehijo,describepadre) values (7,'ES COMERCIAL DE','COMERCIALES');
-insert into entidades_links_tipos (id,describehijo,describepadre) values (8,'ES COMERCIAL DE','COMERCIALES');
+insert into entidades_links_tipos (id,describehijo,describepadre) values (8,'ES DIRECTIVO DE','DIRECTIVOS');
 insert into entidades_links_tipos (id,describehijo,describepadre) values (9,'ES REPRESENTANTE/AGENTE CUENTA PROPIA DE','REPRESENTANTES/AGENTES POR CUENTA PROPIA');
 insert into entidades_links_tipos (id,describehijo,describepadre) values (10,'ES REPRESENTANTE/AGENTE CUENTA AJENA (SUBAGENTE) DE','REPRESENTANTES/AGENTES POR CUENTA AJENA (SUBAGENTE)');
+
 
 select setval('entidades_links_tipos_id_seq',max(id)) from entidades_links_tipos;
 ALTER TABLE entidades_links_tipos
   OWNER TO stg;
+
+create table entidades_links_cargos(
+id serial primary key,
+entidadtipo_id integer references entidades_links_tipos(id) match full,
+describe character varying(100)
+);
+insert into entidades_links_cargos (id,entidadtipo_id,describe) values (1,1,'DIRECTOR COMERCIAL');
+insert into entidades_links_cargos (id,entidadtipo_id,describe) values (2,1,'INFORMATICO');
+insert into entidades_links_cargos (id,entidadtipo_id,describe) values (3,1,'CONTABLE');
+insert into entidades_links_cargos (id,entidadtipo_id,describe) values (4,1,'MOZO DE ALMACÉN');
+ALTER TABLE entidades_links_CARGOS
+  OWNER TO stg;
+
+ 
 
 create table entidades_tipos(
 id serial primary key,
@@ -441,30 +456,37 @@ CREATE unique INDEX idx_entidades_codentidad ON entidades USING btree (codentida
 																														
 insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (1,'SUAREZ Y MORALES REPRESENTACIONES, S.L','SYM','B35386630',6,true);
 insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (2,'DIMOLAX CANARIAS, S.L','DIMOLAX CANARIAS, S.L','B35386631',6,true);
+insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (3,'GUAYASEN GONZALEZ SANTIAGO','GUAYASEN GONZALEZ SANTIAGO','44715918P',1,false);
+
 select setval('entidades_id_seq',max(id)) from entidades;
 ALTER TABLE entidades
   OWNER TO stg;
 
 
-
+--drop table entidades_links;
 create table entidades_links( --relaciones entre las entidades
 id serial primary key,
 entidadlink_id integer references entidades(id) match full,
 entidadlinkpadre_id integer references entidades(id) match full,
 -- Campos adicionales que necesitan ponerse 
-codentidad character(10),
+codentidad character varying(10),
+entidadlinktipo_id integer references entidades_links_tipos(id) match full,
+entidadlinkcargo_id integer references entidades_links_cargos(id) match simple,
 cuenta_id integer references cuentas(id) match simple default null
 );
 CREATE unique INDEX idx_entidades_entidadlink_id ON entidades_links USING btree (entidadlink_id,entidadlinkpadre_id);
 ALTER TABLE entidades_links
   OWNER TO stg;
 
+insert into entidades_links (id,entidadlink_id,entidadlinkpadre_id,entidadlinktipo_id,entidadlinkcargo_id,codentidad) values (1,3,1,1,2,'emp-001');
+insert into entidades_links (id,entidadlink_id,entidadlinkpadre_id,entidadlinktipo_id,entidadlinkcargo_id,codentidad) values (2,3,2,1,2,'emp-002');
 /* una entidad apunta aun grupo de venta
 create table  entidades_gruposventas(
 id serial primary key,
 entidad_id integer references entidades(id) match full,
 grupoventa_id references gruposventas(id),
 );
+select * from entidades_links
 
 
 ALTER TABLE entidades_gruposventas

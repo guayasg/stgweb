@@ -23,12 +23,11 @@
         <td><%= entidad.nomentidad %></td>
         <td><%= entidad.nomcomercial %></td>
         <td><%= entidad.nif %></td>
-        <td><%= entidad.grupoventa.describe %></td>
+        <td><%= entidad.grupoventa.describe if !entidad.grupoventa.nil? %></td>
         <td><%= entidad.direcciones.size %></td>
         <td><%= entidad.superiores.size %></td>
         <td><%= entidad.subordinados.size %></td>
-        <td><%= %></td>
-        
+                
         <td<%= link_to 'Mostrar', entidad_path(entidad) %></td>
         <td><%= link_to 'editar', edit_entidad_path(entidad) %></td>
         
