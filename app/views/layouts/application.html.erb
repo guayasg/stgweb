@@ -8,10 +8,59 @@
             <%= stylesheet_link_tag :all,'bootstrap', media: 'all'%>
             <%= javascript_include_tag :application, :all, :cache => true %>
             <%= csrf_meta_tags %>
-            
+
+
+
+
+<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+  <div class="container1">
+    <div class="navbar-header">
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class= "icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="./" class="navbar-brand">Bootstrap 3 Menu Generator</a>
+    </div>
+    <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="#">Getting started</a>
+        </li>
+				<li class="dropdown">
+	        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+	        <ul class="dropdown-menu">
+	          <li><a href="#">Action</a></li>
+	          <li><a href="#">Another action</a></li>
+	          <li><a href="#">Something else here</a></li>
+	          <li><a href="#">Separated link</a></li>
+	          <li><a href="#">One more separated link</a></li>
+	        </ul>
+	      </li>
+        <li>
+          <a href="#">Components</a>
+        </li>
+        <li>
+          <a href="#">JavaScript</a>
+        </li>
+        <li class="active">
+          <a href="#">Customize</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+              
     </head>
     <body>
-	<div class="container">
+  
+
+
+
+  
+
+<div class="container">
                 <div class="row">
                       <div class="span9"><%= yield %></div>
                       <div class="span3">
@@ -20,7 +69,6 @@
                  </div>
        </div>
         </div>
-   
         <!-- Main component for a primary marketing message or call to action -->  
 
         <!--http://stackoverflow.com/questions/10123354/twitter-bootstrap-in-rails-3-2-3
@@ -141,6 +189,50 @@
   	  </li>
   	</li>
 </ul>
+
+
+
+<nav class="navbar navbar-fixed-top navbar-default" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapsable">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/home" class="navbar-brand">My great app</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-collapsable">
+      <ul class="nav navbar-nav foo" id="menu">
+        <p class="navbar-text">Pick an option:</p>
+        <li class="active"><a href="/">Home</a></li>
+        <li><a href="/about-us">About Us</a></li>
+        <li>
+          <a href="/contact">
+            <span class='glyphicon glyphicon-hand-right'></span>
+            Contact Us!
+          </a>
+        </li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Stuff <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header">Great stuff!</li>
+            <li><a href="/one">One</a></li>
+            <li><a href="/two">Two</a></li>
+            <li><a href="/three">Three</a></li>
+            <li class="divider"></li>
+            <li><a href="/admin">Admin Dashboard</a></li>
+            <li><a href="/admin/users">Users</a></li>
+          </ul>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right" align="right">
+        <li><a href="/logout">Log Out</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
 
 
