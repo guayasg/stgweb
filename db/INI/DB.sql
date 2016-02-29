@@ -96,20 +96,30 @@ insert into menus (id,menu_id,texto,textoayuda,iconopen,iconclosed,metodo) value
 
 select setval('menus_id_seq',max(id)) from menus;
 
+select length('hola carahola') -length(replace('hola carahola','h',''))
 
+select length('a/b/c') - length(replace('/','/',''))
+select split_part('a/b/c','/',length('a/b/c') - length(replace('a/b/c','/','')))
 
+drop view if exists menupaths;
 CREATE OR REPLACE VIEW menupaths AS
 WITH RECURSIVE menupaths AS (
-SELECT id,menu_id as padre_id,texto,textoayuda,metodo, ''::character varying as padre, texto::text as path_texto,id::text as path_id,iconopen,iconclosed FROM menus WHERE menu_id is null 
+SELECT id,menu_id as padre_id,texto,textoayuda,metodo, ''::character varying as padre, texto::text as path_texto,id::text as path_id,iconopen,iconclosed,0 as nivel
+	
+FROM menus WHERE menu_id is null 
 UNION
-SELECT
-menus.id,menus.menu_id as padre_id,menus.texto,menus.textoayuda,menus.metodo,parentpath.texto as padre, parentpath.path_texto||'/'||menus.texto as path_texto,parentpath.path_id||'/'||menus.id as path_id,menus.iconopen,menus.iconclosed
+SELECT menus.id,menus.menu_id as padre_id,menus.texto,menus.textoayuda,menus.metodo,parentpath.texto as padre, 
+	parentpath.path_texto||'/'||menus.texto as path_texto,parentpath.path_id||'/'||menus.id as path_id,menus.iconopen,menus.iconclosed,
+	length(parentpath.path_texto) -length(replace(parentpath.path_texto,'/',''))+1 as nivel
+	
+	
+	
 FROM menus, menupaths parentpath
 WHERE  parentpath.id=menus.menu_id
 )
 SELECT * FROM menupaths order by padre,texto;
 
-
+select * from menupaths
 
 create table acciones(
 id serial primary key,

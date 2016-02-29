@@ -5,8 +5,9 @@ class ApplicationController < ActionController::Base
   helper_method :pintar_menu
   def pintar_menu(nivel)
     #la función de base de datos que llamemos debe de indicarnos el nivel, quien es el padre (id, nombre del padre)
-    Menu=Menu_frame
-    Menu+=link_toUIp(nivel) + link_toEmpresa + link_to  
+    #Menu=Menu_frame
+=begin    
+    Menu+=link_toUP(nivel) + link_toEmpresa +  
     '<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
     <div class="Menu">
       <div class="navbar-header">
@@ -17,7 +18,7 @@ class ApplicationController < ActionController::Base
           <span class="icon-bar"></span>
         </button>
         {#}
-        <a href="./" class="navbar-brand">Bootstrap 3 Menu Generator</a>
+        <a href="./" class="navbar-brand">Bootstra stgweb p 3 Menu Generator</a>
       </div>
       <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
         <ul class="nav navbar-nav">
@@ -47,7 +48,7 @@ class ApplicationController < ActionController::Base
     </nav>
   </div>
 </header>'
-    
+=end    
   end
   
 end
