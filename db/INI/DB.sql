@@ -1742,6 +1742,7 @@ fechaestimada date default null,
 tipofpago_id integer,--pendiente por definir cuando pensemos en cartera
 fechacash date default null, --fecha de cobro o pago (gestionada por cartera automáticamente)
 refentidad character(50) default null, --referencia del documento de la entidad a la que estamos vinculados (numero factura de proveedor, talón de venta...)
+cumplimentado timestamp default null, -- Si todas las líneas están cumpimentadas, se pondrá con fecha de la última cumplimentación. Despuñes se podrá quitar esta marca
 check (not (entidad_id is null and (almacenorigen_id is null and almacendestino_id is null))),
 unique (refusuario)
 );
