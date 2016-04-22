@@ -2,13 +2,27 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  helper_method :pintar_menu
+  helper_method :pintar_menu,:link_toUP
+  
+  def link_toUP(nivel)
+     nivel=nivel || 0
+     ruta=request.path_info + "?&nivel=" + (nivel>0?nivel-1:nivel).to_s
+     return ruta 
+  end
+  
   def pintar_menu(nivel)
     #la función de base de datos que llamemos debe de indicarnos el nivel, quien es el padre (id, nombre del padre)
+
+    # result = ActiveRecord::Base.connection.
     #Menu=Menu_frame
-=begin    
-    Menu+=link_toUP(nivel) + link_toEmpresa +  
-    '<header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
+                 #+ link_toEmpresa(result,Empresa) + link_toElementos(result)
+#            +
+#            '  </div>    </div>        </header>'
+             
+
+=begin      
+    
+    <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
     <div class="Menu">
       <div class="navbar-header">
         <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
@@ -17,7 +31,6 @@ class ApplicationController < ActionController::Base
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        {#}
         <a href="./" class="navbar-brand">Bootstra stgweb p 3 Menu Generator</a>
       </div>
       <nav class="collapse navbar-collapse bs-navbar-collapse" role="navigation">
