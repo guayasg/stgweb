@@ -1,6 +1,6 @@
 class Entidad < ActiveRecord::Base
   self.table_name = "entidades"
-  has_many :direcciones
+  has_many :direcciones, class_name: "Direccion"
   belongs_to :entidad_tipo, class_name: "EntidadTipo", foreign_key: "tipo_id"
   
   has_many :subordinados, class_name: "EntidadLink", foreign_key: "entidadlinkpadre_id"
@@ -37,8 +37,8 @@ class Grupoventa < ActiveRecord::Base
 end
 
 class Direccion < ActiveRecord::Base
-  self.table_name="direcciones"
-  belongs_to :entidad
+  self.table_name = "direcciones"
+  belongs_to :entidad, foreign_key: "entidad_id"
 end
 
 

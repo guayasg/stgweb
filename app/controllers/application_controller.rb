@@ -6,14 +6,15 @@ class ApplicationController < ActionController::Base
   
   def link_toUP(nivel)
      nivel=nivel || 0
-     ruta=request.path_info + "?&nivel=" + (nivel>0?nivel-1:nivel).to_s
+     ruta=request.path_info + (nivel ? "?&nivel=" + nivel : "nivel").to_s  
      return ruta 
+     # <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
   end
   
   def pintar_menu(nivel)
     #la función de base de datos que llamemos debe de indicarnos el nivel, quien es el padre (id, nombre del padre)
 
-    # result = ActiveRecord::Base.connection.
+    # result = ActiveRecord::Base.connection.select_all.
     #Menu=Menu_frame
                  #+ link_toEmpresa(result,Empresa) + link_toElementos(result)
 #            +

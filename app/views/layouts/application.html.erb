@@ -10,8 +10,6 @@
             <%= csrf_meta_tags %>
 
 
-
-
 <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
     <div class="Menu">
       <div class="navbar-header">
@@ -21,29 +19,60 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a href=" 
-        <%= nivel=(params["nivel"]||3).to_i 
-        link_toUP(nivel) %> " class="navbar-brand">
+           <a href=" 
+        <% nivel=(params["nivel"]).to_i ||nil %>  
+        <% n = ActiveRecord::Base.connection.select_all("select * from menupaths where #{(nivel && nivel!=0? 'id=' + nivel.to_s : 'padre_id is null') }") %>
+         <%= request.path_info  + (n[0]["padre_id"] ? "?&nivel=" + n[0]["padre_id"] : "") %> 
+        <%# link_toUP( (n[0] ? n[0]["id"] : nil )   
+        %> 
+        " class="navbar-brand">
         <span class="glyphicon glyphicon-chevron-up" aria-hidden="true"></span>
          Ir a nivel superior </a>
+      
         <ul class="nav navbar-nav">
         <li>
-          <a href="#">Getting started</a>
+          <a href="<%finruta=""#link_toMENU(nivel,:enlace) 
+          %>">Enlace a Empresa</a>
         </li>
+        <%  n.each do |m| %>
 			<li class="dropdown">
-	        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-	        <ul class="dropdown-menu">
-	          <li><a href="    ">Action</a></li>
-	          
-	        </ul>
+			<% if m["hijos"].to_i>0	%>
+	        	<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= m["texto"] %> <b class="caret"></b></a>
+	        	<ul class="dropdown-menu"> 
+	        	<% ActiveRecord::Base.connection.select_all("select * from menupaths where  padre_id= #{m["id"]}").each do |s| %>
+	        		<% if s["hijos"].to_i>0 %>
+	            		<li> <a href="<%= request.path_info + "?&nivel=" + (s["id"]).to_s %> "><%= s["texto"] %></a></li>
+	            	<% else %>
+	            		<li> <a href="<%= request.base_url + "/" + s["metodo"] + "?&nivel=" + (s["padre_id"]).to_s %>"><%= s["texto"] %> </a> </li>
+	            	<% end %>
+	            	<% finruta = s["texto"].b  if (request.path_info).include?("/#{s['metodo']}") && s["metodo"].length>0 
+	            	%>
+	        	<% end %>
+	        	</ul>
+	        <% else %>
+	        	<a href="<%= request.base_url + "/" + m["metodo"] %> "><%= m["texto"] %></a>
+	        <% end %>
+	        <% finruta = m["texto"].b  if (request.path_info).include?("/#{m['metodo']}") && m["metodo"].length>0 %>
 	      </li>
-        <li>
-
-         
+	    <% end %>
+      <li class="active">
+      <a href="#">  </a>
+  	   </li>
+      <li class="active">
+       <a href="#"><%= n[0]["path_texto"]  + (finruta ? "/" + finruta : "") %></a>
+       	   </li>
+  	   </ul>
       </div>
     </div>
-</header>    
+</header>  
+<br>
+<br>
+
+
 <!--
+    
+	
+	raw "string" hará que se escriba bien en html. ver html_safe
 <header class="navbar navbar-inverse navbar-fixed-top bs-docs-nav" role="banner">
   <div class="container1">
     <div class="navbar-header">
@@ -92,6 +121,7 @@
 
 <div class="container">
                 <div class="row">
+
                       <div class="span9"><%= yield %></div>
                       <div class="span3">
                          <h2>Sobre Nosotros</h2>

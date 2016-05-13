@@ -22,9 +22,11 @@ class FamiliasController < ApplicationController
     if @id != 0
       @k=flash[:success] ? :success : (flash[:danger] ? :danger : nil) # componemos la clave para mensajes de error
       @fam_prop = Familia.find(@id) # familias_propiedades
+      @tienepropiedades = @fam_prop && @fam_prop.familias_propiedades.count >0
       #@nombres_articulos=Familia.find_by_sql("select * from mod_articulos_nombre(#{params[:id]},array[]::integer[],array[]::integer[],array[]::integer[]) ");
       #@nombres_articulos=Articulos.where(familia_id: @id)#Familia.connection.select_all("select * from mod_articulos_nombre(#{@id},array[]::integer[],array[]::integer[],array[]::integer[]) ")
-      @propiedades_familia=Familia.connection.select_values("select propiedad_valor,id from mod_propiedades_elementos_combinatoria(#{@id})") 
+      @propiedades_familia=Familia.connection.select_values("select propiedad_valor,id from mod_propiedades_elementos_combinatoria(#{@id})")
+      @ 
     end
   end
 

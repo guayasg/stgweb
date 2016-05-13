@@ -81,19 +81,20 @@ unique (texto)
 COMMENT ON table menus IS 'Opciones de menú de la aplicación';
 
 delete from menus;
-insert into menus (id,menu_id,texto,textoayuda,metodo) values (1,null,'Oficina','Area de Oficina','');
-insert into menus (id,menu_id,texto,textoayuda,metodo) values (2,null,'Produccion','Area de Produccion','');
-insert into menus (id,menu_id,texto,textoayuda,metodo) values (3,null,'Comercial','Area Comercial','');
-insert into menus (id,menu_id,texto,textoayuda,metodo) values (4,null,'Maestros comunes','Elementos básicos comunes, o que afectan a más de un area anterior','');
-insert into menus (id,menu_id,texto,textoayuda,metodo) values (5,4,'Relacion entre sociedades','Definición de los posibles vínculos de una sociedad con otra (Proveedor De, cliente De...)','');
-insert into menus (id,menu_id,texto,textoayuda,metodo) values (6,4,'Tipos de sociedades','Tipo de personalidad, y forma juridica','');
-insert into menus (id,menu_id,texto,textoayuda,metodo) values (7,4,'Sociedades','Sociedades/personas con las que nos relacionamos','');
+insert into menus (id,menu_id,texto,textoayuda,metodo) values (1,null,'Oficina','Area de Oficina','oficina');
+insert into menus (id,menu_id,texto,textoayuda,metodo) values (2,null,'Produccion','Area de Produccion','produccion');
+insert into menus (id,menu_id,texto,textoayuda,metodo) values (3,null,'Comercial','Area Comercial','comercial');
+insert into menus (id,menu_id,texto,textoayuda,metodo) values (4,null,'Maestros comunes','Elementos básicos comunes, o que afectan a más de un area anterior','maestros');
+insert into menus (id,menu_id,texto,textoayuda,metodo) values (5,4,'Entidades','Definición y posibles vínculos de una sociedad con otra (Proveedor De, cliente De...)','entidades');
+insert into menus (id,menu_id,texto,textoayuda,metodo) values (6,4,'Tipos de sociedades','Tipo de personalidad, y forma juridica','tipossociedades');
+insert into menus (id,menu_id,texto,textoayuda,metodo) values (7,4,'Vinculos entre entidades','títulos de los vínculos entre entidades','vinculosentidades');
 insert into menus (id,menu_id,texto,textoayuda,iconopen,iconclosed,metodo) values (9,2,'Productos','Todo lo relacionado con la gestion del catalogo (articulos, almacenes)','productos-open.png','productos-closed.png','');
 insert into menus (id,menu_id,texto,textoayuda,iconopen,iconclosed,metodo) values (10,9,'Familias de los articulos','Gestión de las diferentes  que categorizan a los articulos','familias-open.png','familias-closed.png','');
 insert into menus (id,menu_id,texto,textoayuda,iconopen,iconclosed,metodo) values (11,9,'Propiedades de los articulos','Definicion de las propiedades que definen la naturaleza de los articulos y familias','propiedades-open.PNG','propiedades-closed.PNG','Mod_propiedades');
 insert into menus (id,menu_id,texto,textoayuda,iconopen,iconclosed,metodo) values (12,9,'Catálogos de propiedad','Definicion de conjunto de propiedades con sus valores preconfigurados','catalogos-propiedades-open.png','catalogos-propiedades-closed.png','');
 insert into menus (id,menu_id,texto,textoayuda,iconopen,iconclosed,metodo) values (13,9,'Artículos','Gestion de los diferentes articulos','articulos-open.png','articulos-closed.png','');
 
+select  * from menupaths where nivel=0
 select setval('menus_id_seq',max(id)) from menus;
 
 select length('hola carahola') -length(replace('hola carahola','h',''))
@@ -112,14 +113,18 @@ SELECT menus.id,menus.menu_id as padre_id,menus.texto,menus.textoayuda,menus.met
 	parentpath.path_texto||'/'||menus.texto as path_texto,parentpath.path_id||'/'||menus.id as path_id,menus.iconopen,menus.iconclosed,
 	length(parentpath.path_texto) -length(replace(parentpath.path_texto,'/',''))+1 as nivel
 	
-	
-	
+
 FROM menus, menupaths parentpath
 WHERE  parentpath.id=menus.menu_id
 )
-SELECT * FROM menupaths order by padre,texto;
+SELECT menupaths.*,coalesce(t.hijos,0)  as hijos
+FROM menupaths left join 
+(select padre_id, count(*) as hijos from menupaths group by padre_id) t on menupaths.id=t.padre_id;
 
 select * from menupaths
+order by padre,texto;
+
+select * from menupaths where padre_id=4 is null#{(nivel ? 'id=' + nivel.to_s : 'padre_id is null
 
 create table acciones(
 id serial primary key,
@@ -338,31 +343,47 @@ insert into direcciones_tipos (id,describe,esunica,sede,sedenima) values (6,'SED
 
 select setval('direcciones_tipos_id_seq',max(id)) from direcciones_tipos;
 
-
-create table direcciones(
-id serial primary key,
-nomsede character varying (50) default '', --indicará un texto para describir la dirección, como puede ser "sucursal del sur", "dirección de envío"...o lo que se quiera
-entidad_id integer references entidades(id) match full,
-calle_id integer references dircalles(id) match full,
-infocomplementaria_id integer references dirinfocomplementarias(id)  match full default 1,
-infocomplementaria character varying(50) default '',
-numgobierno integer,
-portal character varying(10),
-piso integer,
-escalera character varying(10),
-letra character varying(10),
-telf1 character varying(30),
-telf2 character varying(30),
-web character varying(60),
-email character varying(60),
-gpsx character varying(10),
-gpsy character varying(10),
-nima character varying(30)
+drop table direcciones;
+CREATE TABLE direcciones
+(
+  id serial NOT NULL,
+  nomsede character varying(50) DEFAULT ''::character varying,
+  entidad_id integer,
+  calle_id integer,
+  infocomplementaria_id integer DEFAULT 1,
+  infocomplementaria character varying(50) DEFAULT ''::character varying,
+  numgobierno integer,
+  portal character varying(10),
+  piso integer,
+  escalera character varying(10),
+  letra character varying(10),
+  telf1 character varying(30),
+  telf2 character varying(30),
+  web character varying(60),
+  email character varying(60),
+  gpsx character varying(10),
+  gpsy character varying(10),
+  nima character varying(30),
+  CONSTRAINT direcciones_pkey PRIMARY KEY (id),
+  CONSTRAINT direcciones_calle_id_fkey FOREIGN KEY (calle_id)
+      REFERENCES dircalles (id) MATCH FULL
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT direcciones_entidad_id_fkey FOREIGN KEY (entidad_id)
+      REFERENCES entidades (id) MATCH FULL
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT direcciones_infocomplementaria_id_fkey FOREIGN KEY (infocomplementaria_id)
+      REFERENCES dirinfocomplementarias (id) MATCH FULL
+      ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+  OIDS=FALSE
 );
+
+
 ALTER TABLE direcciones
   OWNER TO stg;
 
-
+drop table direcciones_tipos_links;
 create table direcciones_tipos_links(
 id serial primary key,
 direccion_id integer references direcciones(id) match full,
@@ -455,6 +476,7 @@ id serial primary key,
 nomentidad character varying(200),
 nomcomercial character varying(200),
 nif character(15),
+delegacion_id integer references entidades(id) match simple,
 tipo_id integer references entidades_tipos(id) match full DEFAULT 1,
 espropia bool default false,
 codentidad character(10),
@@ -465,7 +487,7 @@ CREATE unique INDEX idx_entidades_codentidad ON entidades USING btree (codentida
 
 																														
 insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (1,'SUAREZ Y MORALES REPRESENTACIONES, S.L','SYM','B35386630',6,true);
-insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (2,'DIMOLAX CANARIAS, S.L','DIMOLAX CANARIAS, S.L','B35386631',6,true);
+insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (2,'DIMOLAX CANARIAS, S.L','DIMOLAX CANARIAS, S.L','B76064922',6,true);
 insert into entidades (id,nomentidad,nomcomercial,nif,tipo_id,espropia) values (3,'GUAYASEN GONZALEZ SANTIAGO','GUAYASEN GONZALEZ SANTIAGO','44715918P',1,false);
 
 select setval('entidades_id_seq',max(id)) from entidades;
