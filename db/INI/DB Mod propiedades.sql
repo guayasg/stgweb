@@ -36,6 +36,8 @@ select * from articulos_grupopropiedades where id=160
 select * from familias where id=17
 select * from mod_familia_propiedad_grupo_bsc(17)
 drop function if exists mod_familia_propiedad_grupo_bsc(integer,integer[],integer[]);
+select * from mod_familia_propiedad_grupo_bsc(17);
+select * from mod_familia_propiedad_grupo_bsc(16325)
 CREATE OR REPLACE FUNCTION mod_familia_propiedad_grupo_bsc (IN integer,	OUT id INTEGER, OUT describe text)
   RETURNS SETOF record AS
 $BODY$
@@ -76,6 +78,9 @@ select * from articulos_grupopropiedades
 
 
 select * from mod_propiedades_heredadas_bsc  (17,false)
+select * from mod_propiedades_heredadas_bsc  (17,false) t 
+	inner join propiedades on t.propiedad_id=propiedades.id
+	inner join 
 
 drop function mod_propiedades_heredadas_bsc  (IN integer, IN boolean);
 CREATE OR REPLACE FUNCTION mod_propiedades_heredadas_bsc  (IN integer, IN boolean, 
@@ -240,6 +245,78 @@ $BODY$
   COST 100
   ROWS 1000;
   
+select * from propiedades
+
+with t as(
+select t1.propiedad_id, propiedad, 
+	coalesce(vl.n_valorligado,0) as valligados, 
+count(*) as valores,case when max(pc1.id) is not null or max(pc2.id) is not null or max(pc3.id) is not null then true else false end as codifica
+from mod_propiedades_heredadas_bsc (17,false) t1
+	left join 
+		(select fp.propiedad_id as prop1_id, fp2.propiedad_id as prop2_id,count(fp2_id) as n_valorligado
+		 from familias_valoresligados fv 
+			inner join familias_propiedades fp on fv.fp_id=fp.id --se supone que fp1_id es la misma propiedad que fp2_id
+			inner join familias_propiedades fp2 on fv.fp2_id=fp2.id
+		 group by fp.propiedad_id,fp2.propiedad_id  ) vl on (t1.propiedad_id = vl.prop1_id) or (t1.propiedad_id = vl.prop2_id) 
+	inner join 
+		propiedades on t1.propiedad_id=propiedades.id 
+			left join propiedades_componer pc1 on propiedades.componertcorto_id =pc1.id and pc1.describe like 'cod + %' 
+			left join propiedades_componer pc2 on propiedades.componertlargo_id =pc2.id and pc2.describe like 'cod + %' 
+			left join propiedades_componer pc3 on propiedades.componertcomercial_id =pc3.id and pc3.describe like 'cod + %' 
+where t1.propiedad_id is not null
+group by t1.propiedad_id,propiedad,coalesce(vl.n_valorligado,0)
+)
+select propiedad_id, propiedad||' con '||case when valligados>1 and not codifica then valligados||' valores (ligados) y sin codificación. Corregir' 
+				when valligados<1 and not codifica and valores>1 then valores||' valores y sin codificación. Corregir'
+				else case when valligados>0 then valligados||' valores (ligados)' else valores||' valores' end end as describe,
+	sum(case when valligados>1 then valligados else valores end) over () as total
+from t;
+
+
+		--window w_prop_distintas as (partition by propiedad_id)	
+ select mod_propiedades_elementos_combinatoria_resumidos
+CREATE OR REPLACE FUNCTION mod_propiedades_elementos_combinatoria_resumidos(IN integer,out id integer, OUT propiedad_valor text, OUT orden integer)
+  RETURNS SETOF record AS
+$BODY$
+declare
+/* devuelve las diferentes propidades que están en una familia, y sus correpondientes cuenta de  valores ligados, y si conforma 
+o no la codificación del artículo */
+
+  p_familia_id alias for $1;
+begin	
+	return query
+		with t as(
+			select t1.propiedad_id, propiedad, coalesce(vl.n_valorligado,0) as valligados, 
+				count(*) as valores,case when max(pc1.id) is not null or max(pc2.id) is not null or max(pc3.id) is not null then true else false end as codifica
+			from mod_propiedades_heredadas_bsc (17,false) t1
+				left join 
+					(select fp.propiedad_id as prop1_id, fp2.propiedad_id as prop2_id,count(fp2_id) as n_valorligado
+					 from familias_valoresligados fv 
+						inner join familias_propiedades fp on fv.fp_id=fp.id --se supone que fp1_id es la misma propiedad que fp2_id
+						inner join familias_propiedades fp2 on fv.fp2_id=fp2.id
+					  group by fp.propiedad_id,fp2.propiedad_id  
+					 ) vl on (t1.propiedad_id = vl.prop1_id) or (t1.propiedad_id = vl.prop2_id) 
+				inner join 
+					propiedades on t1.propiedad_id=propiedades.id 
+						left join propiedades_componer pc1 on propiedades.componertcorto_id =pc1.id and pc1.describe like 'cod + %' 
+						left join propiedades_componer pc2 on propiedades.componertlargo_id =pc2.id and pc2.describe like 'cod + %' 
+						left join propiedades_componer pc3 on propiedades.componertcomercial_id =pc3.id and pc3.describe like 'cod + %' 
+			where t1.propiedad_id is not null
+			group by t1.propiedad_id,propiedad,coalesce(vl.n_valorligado,0)
+		)
+		select propiedad_id, propiedad||' con '||case when valligados>1 and not codifica then valligados||' valores (ligados) y sin codificación. Corregir' 
+				when valligados<1 and not codifica and valores>1 then valores||' valores y sin codificación. Corregir'
+				else case when valligados>0 then valligados||' valores (ligados)' else valores||' valores' end end as describe,
+			sum(case when valligados>1 then valligados else valores end) over () as total
+		from t;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE
+  COST 100
+  ROWS 1000;
+
+
 
 drop function if exists mod_propiedades_generar_grupos_original  (integer);
 CREATE OR REPLACE FUNCTION mod_propiedades_generar_grupos_original(integer)
