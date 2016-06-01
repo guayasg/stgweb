@@ -12,22 +12,34 @@
 			<div class="alert alert-<%= @k.to_s %>" > <%= flash[@k] %></div> 
 		<% end %>
 		
-		<% if @fam_prop.articulos.count > 0%>
-			<h1>Denominación de artículos y propiedades incluidas</h1>
-			
-			<%= render partial: "grupos", object: f %>
-		<% else %>	
-			<h2>No hay artículos en esta familia</h1>
-			<h4>Familias, Propiedades/valores que generarán los artículos por combinatoria:</h4>
-			<%= select_tag(:id, options_for_select(@propiedades_familia.to_a),{ multiple: true, size: 8})%>
-				
-			<%= f.submit  "(Re)Generar Artículos", class: "btn btn-warning" %>
-		<% end %>
+  			<div class="form-group">
+				<div class="col-sm-4">
+    				<h4>Familias, Propiedades/valores que participan en esta Familia. :</h4>	
+  					<%= select_tag(:id, options_for_select(@propiedades_familia.to_a),{ multiple: true, size: 10}) %>
+				</div>
+				<div class="col-sm-4">
+					<h4>Desglose de combinatoria. Nº de artículos que generará cada propiedad de esta familia</h4>
+					<%= select_tag(:id, options_for_select(@propiedades_articulo.to_a),{ multiple: true, size: 10}) %>
+		 		</div>
+		 		<div class="col-sm-4">
+					<h4><%= @totalarticulos %> Artículos que potencialmente se generarán en esta familia</h4>
+						<center>
+						<% if @validoGenerar %> 
+							<%=	f.submit  "(Re)Generar Artículos", class: "btn btn-warning" %>
+						<% else	%>	
+							<h5>No se pueden generar artículos por problemas de codificación en las propiedades.</h5>
+						<% end %>
+						<h6>Artículos actualmente generados en la familia: <%=@articulostotales %></h6>
+						
+						</center>
+		 		</div>
+			</div>
+			<%= render partial: "tab", object: f %>
 	<% end %>
 <% end %>
 
 	
-<%= render partial: "tab", object: @fam_prop %>
+
 
 
 

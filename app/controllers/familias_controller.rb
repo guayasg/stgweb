@@ -25,8 +25,13 @@ class FamiliasController < ApplicationController
       @tienepropiedades = @fam_prop && @fam_prop.familias_propiedades.count >0
       #@nombres_articulos=Familia.find_by_sql("select * from mod_articulos_nombre(#{params[:id]},array[]::integer[],array[]::integer[],array[]::integer[]) ");
       #@nombres_articulos=Articulos.where(familia_id: @id)#Familia.connection.select_all("select * from mod_articulos_nombre(#{@id},array[]::integer[],array[]::integer[],array[]::integer[]) ")
-      @propiedades_familia=Familia.connection.select_values("select propiedad_valor,id from mod_propiedades_elementos_combinatoria(#{@id})")
-      @ 
+      @propiedades_familia=Familia.connection.select_values("select propiedad_valor, id from mod_propiedades_elementos_combinatoria(#{@id})")
+      @propiedades_articulo=Familia.connection.select_rows("select propiedad_valor, id, n_valores,valido_generar from mod_propiedades_elementos_combinatoria_resumidos(#{@id})")
+      
+      @totalarticulos=@propiedades_articulo.map{|p| p[2].to_i}.inject{|ac,e| ac*e} # devuelve el número de artículos que se generarán
+      @validoGenerar=@propiedades_articulo.map{|p| p[3]}.inject{|ac,e| ac && e}
+      
+      @articulostotales=Familia.find_by_sql("select count(*) as cuenta from articulos where familia_id=#{@id} ").first.try(:cuenta) 
     end
   end
 
@@ -123,7 +128,8 @@ def edit_familias_propiedades
     
     FamiliaPropiedad.transaction do    
       notsave=update_all_modelo FamiliaPropiedad,params[:familia][:familias_propiedades_attributes] 
-      if params[:new_cod]!="" &&  params[:new_prop]!="" && params[:new_valor]!="" && params[:new_separador]!=""
+      if params[:new_cod]!="" &&  params[:new_prop]!="" && params[:new_valor]!="" #&& params[:new_separador]!=""
+        
         FamiliaPropiedad.create(:familia_id => params[:familia][:id].to_i,:propiedad_id => params[:new_prop], :valor => params[:new_valor], :cod=> params[:new_cod],:separador=> params[:new_separador])
       end
       

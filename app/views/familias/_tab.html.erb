@@ -1,12 +1,21 @@
 <div class="tabbable tabs-left">
 	<ul class="nav nav-tabs">
+    	<li class="<%= 'active' if params[:tab] == 'Artincluidos' %>"> <a href="#Artincluidos" data-toggle="tab">Artículos Contenidos</a></li>
     	<li class="<%= 'active' if params[:tab] == 'Famincluidas' %>"> <a href="#Famincluidas" data-toggle="tab">Familias Contenidas</a></li>
     	<li class="<%= 'active' if params[:tab] == 'Propiedades' %>"> <a href="#Propiedades" data-toggle="tab">Propiedades de la familia y valores ligados</a></li>
 	</ul>
 </div>
 
+
 	<div class="tab-content">
-    	<div class="<%= if params[:tab] == 'Famincluidas' || !params[:tab] then 'tab-pane in active'  else 'tab-pane fade' end %>" id="Famincluidas">
+    	<div class="<%= if params[:tab] == 'Artincluidos'  then 'tab-pane in active'  else 'tab-pane fade' end %>" id="Artincluidos">
+    		<% if @fam_prop.articulos.count > 0 %>
+				<h1>Denominación de artículos y propiedades incluidas</h1>
+				<%= render partial: "grupos", object: tab %>
+			<%end%>
+  		</div>			
+
+    	<div class="<%= if params[:tab] == 'Famincluidas'  then 'tab-pane in active'  else 'tab-pane fade' end %>" id="Famincluidas">
     		<h1> Listado de familias incluidas</h1>
 					<%= render partial: "subfamilias", object: @familia_filtrada %>
     	</div>    		
@@ -15,15 +24,16 @@
   			<% if @tienepropiedades %>	
 					<h1> Propiedades y valores de la familia</h1>
 		 			<% if flash[:notice] %>
-    					<div class="alert alert-danger"><%= flash[:notice] %></div>
+    					<div class="alert alert-danger"> <%= flash[:notice] %></div>
   					<% end %>
-				<% elsif @fam_prop %>
-					<h2> No hay propiedades/valores en esta familia</h2>
-				<% end %>
-				<% if @fam_prop %>
-					<%= render partial: "fp_form", object: @fam_prop %>
+  			<% elsif @fam_prop %>
+					<h2> No hay propiedades/valores en esta familia </h2>
+			<% end %>
+			<% if @fam_prop %>
+					<%= render partial: "fp_form", object: @fam_prop 
+					%>
 			<%end %>
-    	</div>  			
+    	</div>  
 	</div>
 	
 

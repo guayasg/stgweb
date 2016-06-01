@@ -159,7 +159,7 @@ $BODY$
 
 
 
-drop function if exists mod_propiedades_combinacion_valida(integer,integer[],integer[]);
+--drop function if exists mod_propiedades_combinacion_valida(integer,integer[],integer[]);
 create or replace function mod_propiedades_combinacion_valida(integer,integer[],integer[]) returns boolean as
 $BODY$
 declare
@@ -266,7 +266,7 @@ from mod_propiedades_heredadas_bsc (17,false) t1
 where t1.propiedad_id is not null
 group by t1.propiedad_id,propiedad,coalesce(vl.n_valorligado,0)
 )
-select propiedad_id, propiedad||' con '||case when valligados>1 and not codifica then valligados||' valores (ligados) y sin codificación. Corregir' 
+select propiedad_id, 'PROP: ": '||propiedad||'" con '||case when valligados>1 and not codifica then valligados||' valores (ligados) y sin codificación. Corregir' 
 				when valligados<1 and not codifica and valores>1 then valores||' valores y sin codificación. Corregir'
 				else case when valligados>0 then valligados||' valores (ligados)' else valores||' valores' end end as describe,
 	sum(case when valligados>1 then valligados else valores end) over () as total
@@ -274,18 +274,10 @@ from t;
 
 
 		--window w_prop_distintas as (partition by propiedad_id)	
- select mod_propiedades_elementos_combinatoria_resumidos
-CREATE OR REPLACE FUNCTION mod_propiedades_elementos_combinatoria_resumidos(IN integer,out id integer, OUT propiedad_valor text, OUT orden integer)
-  RETURNS SETOF record AS
-$BODY$
-declare
-/* devuelve las diferentes propidades que están en una familia, y sus correpondientes cuenta de  valores ligados, y si conforma 
-o no la codificación del artículo */
+ select mod_propiedades_elementos_combinatoria_resumidos(17)
 
-  p_familia_id alias for $1;
-begin	
-	return query
-		with t as(
+
+ with t as(
 			select t1.propiedad_id, propiedad, coalesce(vl.n_valorligado,0) as valligados, 
 				count(*) as valores,case when max(pc1.id) is not null or max(pc2.id) is not null or max(pc3.id) is not null then true else false end as codifica
 			from mod_propiedades_heredadas_bsc (17,false) t1
@@ -304,10 +296,50 @@ begin
 			where t1.propiedad_id is not null
 			group by t1.propiedad_id,propiedad,coalesce(vl.n_valorligado,0)
 		)
-		select propiedad_id, propiedad||' con '||case when valligados>1 and not codifica then valligados||' valores (ligados) y sin codificación. Corregir' 
-				when valligados<1 and not codifica and valores>1 then valores||' valores y sin codificación. Corregir'
+		select propiedad_id, 'PROP: "'||propiedad||' con '||case when valligados>1 and not codifica then valligados||' valores (ligados) y sin codificación. Corregir. Generan varios artículos con igual código' 
+				when valligados<1 and not codifica and valores>1 then valores||' valores y sin codificación. Corregir. Generan varios artículos con igual código'
 				else case when valligados>0 then valligados||' valores (ligados)' else valores||' valores' end end as describe,
-			sum(case when valligados>1 then valligados else valores end) over () as total
+			(sum(case when valligados>1 then valligados else valores end) over ())::integer as total
+		from t;
+
+--drop function mod_propiedades_elementos_combinatoria_resumidos(integer);
+select 	* from mod_propiedades_elementos_combinatoria_resumidos(17)
+
+CREATE OR REPLACE FUNCTION mod_propiedades_elementos_combinatoria_resumidos(IN integer,out id integer, OUT propiedad_valor text, OUT n_valores integer, OUT valido_generar boolean)
+  RETURNS SETOF record AS
+$BODY$
+declare
+/* devuelve las diferentes propidades que están en una familia, y sus correpondientes cuenta de  valores ligados, y si conforma 
+o no la codificación del artículo */
+
+  p_familia_id alias for $1;
+begin	
+	return query
+		with t as(
+			select t1.propiedad_id, propiedad, coalesce(vl.n_valorligado,0) as valligados, 
+				count(*) as valores,case when max(pc1.id) is not null or max(pc2.id) is not null or max(pc3.id) is not null then true else false end as codifica
+			from mod_propiedades_heredadas_bsc (p_familia_id,false) t1
+				left join 
+					(select fp.propiedad_id as prop1_id, fp2.propiedad_id as prop2_id,count(fp2_id) as n_valorligado
+					 from familias_valoresligados fv 
+						inner join familias_propiedades fp on fv.fp_id=fp.id --se supone que fp1_id es la misma propiedad que fp2_id
+						inner join familias_propiedades fp2 on fv.fp2_id=fp2.id
+					  group by fp.propiedad_id,fp2.propiedad_id  
+					 ) vl on (t1.propiedad_id = vl.prop1_id) or (t1.propiedad_id = vl.prop2_id) 
+				inner join 
+					propiedades on t1.propiedad_id=propiedades.id 
+						left join propiedades_componer pc1 on propiedades.componertcorto_id =pc1.id and pc1.describe like 'cod + %' 
+						left join propiedades_componer pc2 on propiedades.componertlargo_id =pc2.id and pc2.describe like 'cod + %' 
+						left join propiedades_componer pc3 on propiedades.componertcomercial_id =pc3.id and pc3.describe like 'cod + %' 
+			where t1.propiedad_id is not null
+			group by t1.propiedad_id,propiedad,coalesce(vl.n_valorligado,0)
+		)
+		select propiedad_id, 'PROP: "'||propiedad||'" generará '||case when valligados>1 and not codifica then valligados||' artículos (valores ligados) y sin codificación. Corregir (varios artículos con igual código)' 
+				when valligados<1 and not codifica and valores>1 then valores||' artículos y sin codificación. Corregir (varios artículos con igual código)'
+				else case when valligados>0 then valligados||' artículos (valores ligados)' else valores||' artículos' end end as describe,
+			case when valligados>0 then valligados else valores end::integer as n_valores,
+			case when (valligados>1 and not codifica) or (valligados<1 and not codifica and valores>1) then false
+				else true end as valido_generar
 		from t;
 
 END;
